@@ -15,7 +15,9 @@ type Participant = {
 
 type Trial = {
     TrialID: string;
-    options: {};
+    options: {
+        instructionDuration: number
+    };
     instructions: string;
     gestures: Gesture[];
 };
