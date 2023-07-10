@@ -8,10 +8,9 @@ import { sign } from "jsonwebtoken";
 require('dotenv').config();
 
 // set up router
-let router = Router();
-
-router.post("/register", register)
-router.post("/login", login)
+const userRouter = Router();
+userRouter.post("/register", register)
+userRouter.post("/login", login)
 
 async function register(req: Request, res: Response) {
     try {
@@ -74,3 +73,5 @@ async function register(req: Request, res: Response) {
 function login(req: Request, res: Response) {
 
 }
+
+export { userRouter };
