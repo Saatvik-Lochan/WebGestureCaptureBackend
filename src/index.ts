@@ -1,5 +1,6 @@
 import express from 'express';
 import { projectRouter } from './project-router.mts';
+import { participantRouter } from './participant-router.mts';
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.all("*", (_, res: express.Response, next: () => any) => {
 });
 
 app.use('/project', projectRouter);
+app.use('/participants', participantRouter);
 
 app.get('/test', (req, res) => {
     res.send('server is running')

@@ -8,7 +8,7 @@ import { isValidTrial } from "./models/project-model.mts";
 const participantRouter = Router();
 participantRouter.post("/add-participant", verifyToken, addParticipantFromReq);
 participantRouter.post("/add-trial", verifyToken, addTrialToParticipant);
-participantRouter.get("/get-participants", verifyToken, addTrialToParticipant);
+participantRouter.get("/get-participants", verifyToken, getParticipants);
 
 
 async function addParticipantFromReq(req: UserAuthRequest, res: Response) {
@@ -71,3 +71,5 @@ async function getParticipants(req: UserAuthRequest, res: Response) {
         console.log(err.message);
     }
 }
+
+export { participantRouter };
