@@ -27,6 +27,7 @@ async function addParticipantFromReq(req: UserAuthRequest, res: Response) {
         }
 
     } catch (err) {
+        res.status(400).send("Unknown error");
         console.log(err.message);
     }
 }
