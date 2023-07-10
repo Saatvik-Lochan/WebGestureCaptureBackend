@@ -3,6 +3,8 @@ type Project = {
     name: string;
     description: string;
     encryptedPass: string;
+
+    participants: Participant[];
     token?: string; 
 };
 

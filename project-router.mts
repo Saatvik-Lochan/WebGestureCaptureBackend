@@ -13,6 +13,7 @@ const projectRouter = Router();
 projectRouter.post("/register", register);
 projectRouter.post("/login", login);
 
+// set up auth
 async function register(req: Request, res: Response) {
     try {
         const { name, description, password } = req.body;
@@ -29,7 +30,7 @@ async function register(req: Request, res: Response) {
     async function encryptAndStore(name: string, description: string, password: string) {
         const encryptedPass = await hash(password, 10);
 
-        const newProject: Project = {name, description, encryptedPass};
+        const newProject: Project = {name, description, encryptedPass, participants: []};
         const insertedProj = await addProject(newProject);
         const projWithToken = createAndAddToken(insertedProj);
         res.status(201).json(projWithToken);
