@@ -1,8 +1,12 @@
 {
     "compilerOptions": {
+       "allowImportingTsExtensions": true,
+       "noEmit": true,
        "target": "es6",
+       "module": "es6",
        "types": ["node", "express"],
        "allowSyntheticDefaultImports": true,
-       "esModuleInterop": true
+       "esModuleInterop": true,
+       "moduleResolution": "node"
      },
 }

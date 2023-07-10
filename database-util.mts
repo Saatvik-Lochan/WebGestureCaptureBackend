@@ -1,5 +1,5 @@
 import Datastore from "nedb"
-import { Project } from "./models/project-model";
+import { Project } from "./models/project-model.mts";
 
 // set up database
 const projectDb = new Datastore({

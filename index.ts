@@ -1,8 +1,7 @@
 import express from 'express';
-import { userRouter } from './user-router';
+import { userRouter } from './user-router.mts';
 
 const app = express();
-
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
@@ -16,3 +15,7 @@ app.all("*", (_, res: express.Response, next: () => any) => {
 
 app.use('/api', userRouter);
 
+app.get('/test', (req, res) => {
+    res.send('server is running')
+  })
+app.listen(3000);
