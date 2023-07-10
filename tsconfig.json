@@ -1,0 +1,7 @@
+{
+    "compilerOptions": {
+       "target": "es6",
+       "types": ["node", "express"],
+       "allowSyntheticDefaultImports": true
+     },
+}
