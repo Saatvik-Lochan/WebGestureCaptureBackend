@@ -7,6 +7,8 @@ import { isValidTrial } from "./models/project-model.mts";
 // set up router
 const participantRouter = Router();
 participantRouter.post("/add-participant", verifyToken, addParticipantFromReq);
+participantRouter.post("/add-trial", verifyToken, addTrialToParticipant);
+participantRouter.get("/get-participants", verifyToken, addTrialToParticipant);
 
 
 async function addParticipantFromReq(req: UserAuthRequest, res: Response) {
@@ -50,8 +52,21 @@ async function addTrialToParticipant(req: UserAuthRequest, res: Response) {
         } else {
             participant.pendingTrials.push(trial);
             setParticipant(name, participant);
-            res.status(200).send("Trial added");
+            res.status(201).send("Trial added successfully");
         }
+
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+async function getParticipants(req: UserAuthRequest, res: Response) {
+    try {
+        const { name } = req.user;
+      
+        const proj = await getProject(name);
+        res.status(200).send(proj.participants);
+        
     } catch (err) {
         console.log(err.message);
     }
