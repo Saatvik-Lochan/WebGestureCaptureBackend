@@ -17,5 +17,6 @@ app.use('/project', projectRouter);
 
 app.get('/test', (req, res) => {
     res.send('server is running')
-  })
+});
+
 app.listen(3000);

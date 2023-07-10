@@ -1,8 +1,8 @@
 import { Router, Response, Request } from "express";
 import { addProject, getProject, addTokenTo } from "./database-util.mts";
 import { hash, compare } from "bcrypt";
-import jwt from "jsonwebtoken";
 import { Project } from "./models/project-model.mts";
+import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
 // get environment variables
@@ -31,8 +31,8 @@ async function register(req: Request, res: Response) {
 
         const newProject: Project = {name, description, encryptedPass};
         const insertedProj = await addProject(newProject);
-        createAndAddToken(insertedProj);
-        res.status(201).json(insertedProj);
+        const projWithToken = createAndAddToken(insertedProj);
+        res.status(201).json(projWithToken);
     }
 
     async function checkRequest(req: Request): Promise<Boolean> {
@@ -61,8 +61,8 @@ async function login(req: Request, res: Response) {
         const result = await validateRequest(req);
 
         if (result) {
-            createAndAddToken(result);
-            res.send("Successful login");
+            const projWithToken = createAndAddToken(result);
+            res.status(200).send(projWithToken);
         } else {
             res.status(400).send("Invalid credentials");
         }
@@ -104,6 +104,8 @@ function createAndAddToken(proj: Project) {
     );
 
     addTokenTo(proj.name, token);
+    proj.token = token;
+    return proj;
 }
 
 export { projectRouter };
