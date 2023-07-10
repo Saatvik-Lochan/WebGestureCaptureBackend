@@ -17,7 +17,7 @@ type Participant = {
 };
 
 type Trial = {
-    TrialID: string;
+    trialID: string;
     name: string;
     options: {
         instructionDuration: number

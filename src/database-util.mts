@@ -1,5 +1,5 @@
 import Datastore from "nedb"
-import { Participant, Project } from "./models/project-model.mts";
+import { Participant, Project, Trial } from "./models/project-model.mts";
 
 // set up database
 const projectDb = new Datastore({
@@ -68,5 +68,24 @@ async function setParticipant(projectName: string, newParticipant: Participant) 
     setAllParticipants(projectName, proj.participants);
 }
 
+// trial based functions
+function getTrial(participant: Participant, trialId: string): Trial {
+    let outTrial = null;
 
-export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant };
+    participant.pendingTrials.forEach((trial: Trial) => {
+        if (trial.trialID === trialId) outTrial = participant;
+    });
+
+    return outTrial;
+}
+
+// removes trial from input participant as well
+function removeTrial(projectName: string, participant: Participant, trialId: string) {
+    const newPending = participant.pendingTrials
+        .filter(element => element.trialID != trialId);
+
+    participant.pendingTrials = newPending;
+    setParticipant(projectName, participant);
+}
+
+export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, removeTrial };

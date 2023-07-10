@@ -54,7 +54,7 @@ async function addTrialToParticipant(req: UserAuthRequest, res: Response) {
         if (!participant) {
             return res.status(400).send("Participant does not exist");
         } else {
-            if (participant.pendingTrials.map(trial => trial.TrialID).includes(trial.TrialID)) {
+            if (participant.pendingTrials.map(trial => trial.trialID).includes(trial.trialID)) {
                 return res.status(400).send("Trial of this id already exists");
             }
 
