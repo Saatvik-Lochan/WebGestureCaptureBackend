@@ -56,7 +56,7 @@ async function completeTrial(req: Request, res: Response) {
         // trial is known to be valid after this
         removeTrial(projectName, participant, trialId);
 
-        // save request data
+        // TODO: save request data
 
         res.send(201).send("Data appended");
 
