@@ -45,11 +45,13 @@ function addParticipant(projectName: string, newParticipant: Participant) {
 }
 
 function getParticipant(project: Project, participantId: string): Participant {
+    let outParticipant = null;
+
     project.participants.forEach((participant: Participant) => {
-        if (participant.id === participantId) return participant;
+        if (participant.id === participantId) outParticipant = participant;
     });
 
-    return null;
+    return outParticipant;
 }
 
 function setAllParticipants(projectName: string, allParticipants: Participant[]) {

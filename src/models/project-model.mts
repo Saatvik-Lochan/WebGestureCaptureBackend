@@ -43,22 +43,23 @@ function isValidTrial(trial: Trial) {
         }),
         name: Joi.string().required(),
         instruction: Joi.string().required()
-    }).required();
+    });
 
     const trialSchema = Joi.object({
-        name: Joi.string().alphanum().required(),
+        name: Joi.string().required(),
         TrialID: Joi.string().required(),
         options: Joi.object({
             instructionDuration: Joi.number(),
         }),
         instructions: Joi.string().required(),
-        gestures: Joi.array().items(gestureSchema).required()
+        gestures: Joi.array().items(gestureSchema)
     }).required();
 
     try {
         Joi.assert(trial, trialSchema);
         return true;
     } catch (err) {
+        console.log(err.message);
         return false;
     }
 }

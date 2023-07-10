@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec ts-node-esm index.ts"
+    "dev": "nodemon -e ts,mts src/index.ts"
   },
   "author": "Saatvik Lochan",
   "license": "ISC",

@@ -19,16 +19,18 @@ async function addParticipantFromReq(req: UserAuthRequest, res: Response) {
         const proj = await getProject(name);
         const oldParticipant = getParticipant(proj, id);
 
+        console.log(id);
+
         if (oldParticipant) {
-            res.status(400).send("Participant already exists in this project");
+            return res.status(400).send("Participant already exists in this project");
         } else {
             addParticipant(name, { id, pendingTrials: [], completedTrialFiles: []});
-            res.status(201).send("Participant added");
+            return res.status(201).send("Participant added");
         }
 
     } catch (err) {
-        res.status(400).send("Unknown error");
         console.log(err.message);
+        return res.status(400).send("Unknown error");
     }
 }
 
@@ -38,22 +40,22 @@ async function addTrialToParticipant(req: UserAuthRequest, res: Response) {
         const { id , trial } = req.body;
 
         if (!(id && trial)) {
-            res.status(400).send("Participant ID and Trial required");
+            return res.status(400).send("Participant ID and Trial required");
         } 
 
         if (!isValidTrial(trial)) {
-            res.status(400).send("Trial is invalid");
+            return res.status(400).send("Trial is invalid");
         }
 
         const proj = await getProject(name);
         const participant = getParticipant(proj, id);
         
         if (!participant) {
-            res.status(400).send("Participant does not exist");
+            return res.status(400).send("Participant does not exist");
         } else {
             participant.pendingTrials.push(trial);
             setParticipant(name, participant);
-            res.status(201).send("Trial added successfully");
+            return res.status(201).send("Trial added successfully");
         }
 
     } catch (err) {
@@ -66,7 +68,7 @@ async function getParticipants(req: UserAuthRequest, res: Response) {
         const { name } = req.user;
       
         const proj = await getProject(name);
-        res.status(200).send(proj.participants);
+        return res.status(200).send(proj.participants);
         
     } catch (err) {
         console.log(err.message);
