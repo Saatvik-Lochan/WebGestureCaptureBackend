@@ -1,8 +1,8 @@
-import { Router, Response, Request } from "express";
+import { Router, Response } from "express";
 import { verifyToken } from "./auth.mts";
 import { UserAuthRequest } from "./models/user-auth-request.mts";
 import { addParticipant, getParticipant, getProject, setParticipant } from "./database-util.mts";
-import { isValidTrial } from "./models/project-model.mts";
+import { Trial, isValidTrial } from "./models/project-model.mts";
 
 // set up router
 const participantRouter = Router();
@@ -37,7 +37,7 @@ async function addParticipantFromReq(req: UserAuthRequest, res: Response) {
 async function addTrialToParticipant(req: UserAuthRequest, res: Response) {
     try {
         const { name } = req.user;
-        const { id , trial } = req.body;
+        const { id , trial } = req.body as { id: string, trial: Trial };
 
         if (!(id && trial)) {
             return res.status(400).send("Participant ID and Trial required");
@@ -47,12 +47,17 @@ async function addTrialToParticipant(req: UserAuthRequest, res: Response) {
             return res.status(400).send("Trial is invalid");
         }
 
+
         const proj = await getProject(name);
         const participant = getParticipant(proj, id);
         
         if (!participant) {
             return res.status(400).send("Participant does not exist");
         } else {
+            if (participant.pendingTrials.map(trial => trial.TrialID).includes(trial.TrialID)) {
+                return res.status(400).send("Trial of this id already exists");
+            }
+
             participant.pendingTrials.push(trial);
             setParticipant(name, participant);
             return res.status(201).send("Trial added successfully");

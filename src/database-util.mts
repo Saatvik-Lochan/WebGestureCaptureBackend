@@ -69,5 +69,4 @@ async function setParticipant(projectName: string, newParticipant: Participant) 
 }
 
 
-
 export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant };
