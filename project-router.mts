@@ -9,9 +9,9 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // set up router
-const userRouter = Router();
-userRouter.post("/register", register);
-userRouter.post("/login", login);
+const projectRouter = Router();
+projectRouter.post("/register", register);
+projectRouter.post("/login", login);
 
 async function register(req: Request, res: Response) {
     try {
@@ -106,4 +106,4 @@ function createAndAddToken(proj: Project) {
     addTokenTo(proj.name, token);
 }
 
-export { userRouter };
+export { projectRouter };

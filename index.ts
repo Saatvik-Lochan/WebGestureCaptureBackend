@@ -1,5 +1,5 @@
 import express from 'express';
-import { userRouter } from './user-router.mts';
+import { projectRouter } from './project-router.mts';
 
 const app = express();
 
@@ -13,7 +13,7 @@ app.all("*", (_, res: express.Response, next: () => any) => {
     return next();
 });
 
-app.use('/api', userRouter);
+app.use('/project', projectRouter);
 
 app.get('/test', (req, res) => {
     res.send('server is running')
