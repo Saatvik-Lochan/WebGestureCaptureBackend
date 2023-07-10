@@ -28,9 +28,14 @@ function addProject(project: Project): Promise<Project> {
         projectDb.insert(project, (err, doc: Project) => {
             if (err) throw err;
             else resolve(doc);
-        
         });
     });
 }
 
-export { getProject, addProject };
+function addTokenTo(project_name: string, token: string) {
+    projectDb.update({ name: project_name }, 
+        { $set: {token: token} }, {}
+    );
+}
+
+export { getProject, addProject, addTokenTo };

@@ -1,6 +1,11 @@
 import { Router, Response, Request } from "express";
-import { addProject, getProject } from "./database-util";
+import { addProject, getProject, addTokenTo } from "./database-util";
 import { hash } from "bcrypt";
+import { sign } from "jsonwebtoken";
+
+
+// get environment variables
+require('dotenv').config();
 
 // set up router
 let router = Router();
@@ -16,10 +21,7 @@ async function register(req: Request, res: Response) {
             return;
         }
 
-
-
-
-        // TODO: Check if user in correct format
+        encryptAndStore(name, description, password);
     } catch (err) {
         console.log(err);
     }
@@ -27,10 +29,25 @@ async function register(req: Request, res: Response) {
     async function encryptAndStore(name: string, description: string, password: string) {
         const encryptedPass = await hash(password, 10);
 
-        const newProject = new Project(name, description, encryptedPass);
-        const insertedProject = await addProject(newProject);
-  
-        
+        const newProject: Project = {name, description, encryptedPass};
+        const insertedProj = await addProject(newProject);
+        createAndAddToken(insertedProj);
+
+        function createAndAddToken(proj: Project) {
+            if (!proj._id) throw Error("Must pass in an 'inserted project'");
+
+            const token = sign(
+                { project_id: proj._id, name: proj.name },
+                process.env.TOKEN_KEY,
+                {
+                    expiresIn: "5h"
+                }
+            );
+    
+            addTokenTo(proj.name, token);
+
+            res.status(201).json(proj);
+        }
     }
 
     async function checkRequest(req: Request): Promise<Boolean> {

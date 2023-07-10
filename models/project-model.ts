@@ -1,11 +1,7 @@
-class Project {
+type Project = {
     name: string;
     description: string;
-    encryptedPassword: string;
-
-    constructor(name, description, encryptedPassword) {
-        this.name = name;
-        this.description = description;
-        this.encryptedPassword = encryptedPassword;
-    }
+    encryptedPass: string;
+    token?: string; 
+    _id?: string;
 }
