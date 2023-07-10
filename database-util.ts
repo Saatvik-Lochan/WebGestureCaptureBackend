@@ -1,5 +1,5 @@
-import { error } from "console";
 import Datastore from "nedb"
+import { Project } from "./models/project-model";
 
 // set up database
 const projectDb = new Datastore({

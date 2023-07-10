@@ -2,6 +2,7 @@ import { Router, Response, Request } from "express";
 import { addProject, getProject, addTokenTo } from "./database-util";
 import { hash } from "bcrypt";
 import { sign } from "jsonwebtoken";
+import { Project } from "./models/project-model";
 
 
 // get environment variables
