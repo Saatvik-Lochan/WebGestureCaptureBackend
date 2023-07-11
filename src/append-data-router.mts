@@ -1,7 +1,6 @@
 import { Router, Response, Request } from "express";
 import { getGesture, getParticipant, getProject, getTrial } from "./database-util.mts";
 import { Level } from "level";
-import { string } from "joi";
 
 const gestureDb = new Level<any, ArrayBuffer>('db/gestures.db', {
     keyEncoding: 'json', valueEncoding: 'buffer'
@@ -84,7 +83,6 @@ async function appendData(req: Request, res: Response) {
             currentValue.receivedBatches.push(batchNumber);
             await gestureMetaDb.put(metaKey, currentValue);
         }
-        
     }
 }
 
