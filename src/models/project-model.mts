@@ -54,7 +54,7 @@ function isValidTrial(trial: Trial) {
             instructionDuration: Joi.number(),
         }),
         instructions: Joi.string().required(),
-        gestures: Joi.array().items(gestureSchema)
+        gestures: Joi.array().items(gestureSchema).required()
     }).required();
 
     try {
