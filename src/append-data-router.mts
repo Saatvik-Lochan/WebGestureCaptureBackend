@@ -48,3 +48,5 @@ async function appendData(req: Request, res: Response) {
     await gestureDb.put(key, req.body as ArrayBuffer);
     res.status(201).send("Data added");
 }
+
+export { appendDataRouter };
