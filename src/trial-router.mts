@@ -57,7 +57,6 @@ async function completeTrial(req: Request, res: Response) {
         removeTrial(projectName, participant, trialId);
 
         // TODO: save request data
-
         res.send(201).send("Data appended");
 
     } catch (err) {
