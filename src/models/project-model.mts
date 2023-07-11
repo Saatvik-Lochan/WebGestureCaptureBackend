@@ -49,7 +49,7 @@ function isValidTrial(trial: Trial) {
 
     const trialSchema = Joi.object({
         name: Joi.string().required(),
-        TrialID: Joi.string().required(),
+        trialID: Joi.string().required(),
         options: Joi.object({
             instructionDuration: Joi.number(),
         }),
