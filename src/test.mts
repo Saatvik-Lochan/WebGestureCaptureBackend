@@ -11,3 +11,5 @@ testRouter.get("/get-csv-data", test);
 function test(req, res){
     res.send(value);
 }
+
+export { testRouter };
