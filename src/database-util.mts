@@ -90,12 +90,12 @@ function getGesture(trial: Trial, gestureId: string): Gesture {
 }
 
 // removes trial from input participant as well
-function removeTrial(projectName: string, participant: Participant, trialId: string) {
+function removeTrial(participant: Participant, trialId: string) {
     const newPending = participant.pendingTrials
         .filter(element => element.trialID != trialId);
 
     participant.pendingTrials = newPending;
-    setParticipant(projectName, participant);
+    return participant;
 }
 
 export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, removeTrial, getGesture };

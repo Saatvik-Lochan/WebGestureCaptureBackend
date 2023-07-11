@@ -20,7 +20,7 @@ app.all("*", (_, res: express.Response, next: () => any) => {
 app.use('/project', projectRouter);
 app.use('/participants', participantRouter);
 app.use('/trial', trialRouter);
-app.use('/append-data', appendDataRouter);
+app.use('/data', appendDataRouter);
 // app.use('/test', testRouter);
 
 app.listen(3000);
