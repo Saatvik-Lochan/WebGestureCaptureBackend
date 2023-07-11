@@ -19,7 +19,10 @@ function compress(value){
         skip_empty_lines: true
     });
 
-    return records
+    const out = []
+    records.on('readable', (data)=>out.push(data));
+
+    return out;
 }
 
 export { testRouter };
