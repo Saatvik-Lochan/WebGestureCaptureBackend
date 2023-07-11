@@ -32,6 +32,7 @@ type Gesture = {
         performDuration: number
     };
     name: string;
+    id: string;
     instruction: string;
 };
 
@@ -42,6 +43,7 @@ function isValidTrial(trial: Trial) {
             performDuration: Joi.number()
         }),
         name: Joi.string().required(),
+        id: Joi.string().required(),
         instruction: Joi.string().required()
     });
 

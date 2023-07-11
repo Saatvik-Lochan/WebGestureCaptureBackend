@@ -1,5 +1,5 @@
 import Datastore from "nedb"
-import { Participant, Project, Trial } from "./models/project-model.mts";
+import { Gesture, Participant, Project, Trial } from "./models/project-model.mts";
 
 // set up database
 const projectDb = new Datastore({
@@ -79,6 +79,16 @@ function getTrial(participant: Participant, trialId: string): Trial {
     return outTrial;
 }
 
+function getGesture(trial: Trial, gestureId): Gesture {
+    let outGesture = null;
+
+    trial.gestures.forEach((gesture: Gesture) => {
+        if (gesture.id === gestureId) outGesture = gesture;
+    });
+
+    return outGesture;
+}
+
 // removes trial from input participant as well
 function removeTrial(projectName: string, participant: Participant, trialId: string) {
     const newPending = participant.pendingTrials
@@ -88,4 +98,4 @@ function removeTrial(projectName: string, participant: Participant, trialId: str
     setParticipant(projectName, participant);
 }
 
-export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, removeTrial };
+export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, removeTrial, getGesture };

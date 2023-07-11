@@ -10,19 +10,32 @@ console.log("data has loaded");
 const testRouter = Router();
 testRouter.get("/get-csv-data", test);
 
-function test(req, res){
-    res.send(compress(value));
+async function test(req, res){
+    res.status(200).send(compress(await unpack(value)));
 }
 
-function compress(value){
-    const records = parse(value, {
-        skip_empty_lines: true
+function unpack(value): Promise<string[][]>{
+    return new Promise(resolve => {
+        const records = parse(value, {
+            skip_empty_lines: true
+        });
+    
+        const out: string[][] = [];
+        records
+            .on("data", (data)=> out.push(data))
+            .on("end", () => {resolve(out)});
     });
-
-    const out = []
-    records.on('data', (data)=>out.push(1));
-
-    return out;
 }
+
+function compress(value: string[][]) {
+    // remove header
+    value.splice(0, 1);
+    const transformed = value.flat().map((element) => parseFloat(element));
+    const array = new Float32Array(transformed);
+    
+    console.log(array);
+    return `~${array.buffer.byteLength / 1000000} MB`;
+}
+
 
 export { testRouter };
