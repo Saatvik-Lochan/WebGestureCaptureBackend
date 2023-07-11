@@ -20,7 +20,7 @@ function compress(value){
     });
 
     const out = []
-    records.on('readable', (data)=>out.push(data));
+    records.on('readable', (data)=>out.push(1));
 
     return out;
 }
