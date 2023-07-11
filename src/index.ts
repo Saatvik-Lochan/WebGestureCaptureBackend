@@ -23,4 +23,9 @@ app.get('/test', (req, res) => {
     res.send('server is running')
 });
 
+// Test route (just for now)
+app.get('/gestures', (req, res) => {
+    res.send()
+})
+
 app.listen(3000);
