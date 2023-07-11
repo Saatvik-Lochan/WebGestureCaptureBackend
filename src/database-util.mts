@@ -73,13 +73,13 @@ function getTrial(participant: Participant, trialId: string): Trial {
     let outTrial = null;
 
     participant.pendingTrials.forEach((trial: Trial) => {
-        if (trial.trialID === trialId) outTrial = participant;
+        if (trial.trialID === trialId) outTrial = trial;
     });
 
     return outTrial;
 }
 
-function getGesture(trial: Trial, gestureId): Gesture {
+function getGesture(trial: Trial, gestureId: string): Gesture {
     let outGesture = null;
 
     trial.gestures.forEach((gesture: Gesture) => {
