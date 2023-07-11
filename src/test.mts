@@ -1,7 +1,7 @@
 import { Router, Response } from "express";
 import fs from 'fs';
 
-const datafilename = 'rock_paper_scissors.csv';
+const datafilename = 'src/rock_paper_scissors.csv';
 const value = fs.readFileSync(datafilename)
 
 // set up router
