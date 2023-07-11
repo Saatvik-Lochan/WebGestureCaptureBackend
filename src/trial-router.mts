@@ -54,7 +54,7 @@ async function completeTrial(req: Request, res: Response) {
         }
 
         // trial is known to be valid after this
-        removeTrial(projectName, participant, trialId);
+        removeTrial(participant, trialId);
 
         // TODO: save request data
         
