@@ -1,4 +1,4 @@
-import { Router, Response } from "express";
+import { Router, Response, Request } from "express";
 import { verifyToken } from "./auth.mts";
 import { UserAuthRequest } from "./models/user-auth-request.mts";
 import { addParticipant, getParticipant, getProject, setParticipant } from "./database-util.mts";
