@@ -76,6 +76,7 @@ async function getParticipants(req: UserAuthRequest, res: Response) {
         return res.status(200).send(proj.participants);
         
     } catch (err) {
+        return res.status(400).send("Unknown error");
         console.log(err.message);
     }
 }

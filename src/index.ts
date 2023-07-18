@@ -17,10 +17,10 @@ app.all("*", (_, res: express.Response, next: () => any) => {
     return next();
 });
 
-app.use('/project', projectRouter);
-app.use('/participants', participantRouter);
-app.use('/trial', trialRouter);
-app.use('/data', appendDataRouter);
+app.use('/project', projectRouter); // handles register and login
+app.use('/participants', participantRouter); // manages participants
+app.use('/trial', trialRouter); // deals with browser side client 
+app.use('/data', appendDataRouter); // deals with browser data transfer 
 // app.use('/test', testRouter);
 
 app.listen(3000);
