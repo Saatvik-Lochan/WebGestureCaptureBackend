@@ -11,13 +11,13 @@ type Project = {
 };
 
 type Participant = {
-    id: string;
+    participant_id: string;
     pendingTrials: Trial[];
     completedTrialFiles: string[];
 };
 
 type Trial = {
-    trialID: string;
+    trial_id: string;
     name: string;
     options: {
         instructionDuration: number
@@ -32,7 +32,7 @@ type Gesture = {
         performDuration: number
     };
     name: string;
-    id: string;
+    gesture_id: string;
     instruction: string;
 };
 
@@ -43,13 +43,13 @@ function isValidTrial(trial: Trial) {
             performDuration: Joi.number()
         }),
         name: Joi.string().required(),
-        id: Joi.string().required(),
+        gesture_id: Joi.string().required(),
         instruction: Joi.string().required()
     });
 
     const trialSchema = Joi.object({
         name: Joi.string().required(),
-        trialID: Joi.string().required(),
+        trial_id: Joi.string().required(),
         options: Joi.object({
             instructionDuration: Joi.number(),
         }),

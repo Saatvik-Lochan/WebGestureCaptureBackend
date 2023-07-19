@@ -3,7 +3,7 @@ import { JwtPayload } from "jsonwebtoken"
 
 type ProjectPayload = {
     project_id: string,
-    name: string
+    project_name: string
 }
 
 interface UserAuthRequest extends Request {
