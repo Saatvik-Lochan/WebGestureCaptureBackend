@@ -7,9 +7,10 @@ import { Trial, isValidTrial } from "./models/project-model.mts";
 // set up router
 const participantRouter = Router();
 participantRouter.post("/push-trial", verifyToken, addTrial);
-participantRouter.post("/add-participant", verifyToken, addParticipantFromReq);
-participantRouter.post("/add-trial", verifyToken, addTrialToParticipant);
 participantRouter.get("/get-participants", verifyToken, getParticipants);
+
+// participantRouter.post("/add-trial", verifyToken, addTrialToParticipant);
+// participantRouter.post("/add-participant", verifyToken, addParticipantFromReq);
 
 async function addTrial(req: UserAuthRequest, res: Response) {
     try {
