@@ -16,6 +16,8 @@ async function addTrial(req: UserAuthRequest, res: Response) {
     try {
         const { project_name } = req.user;
         const { participant_id, trial } = req.body as { participant_id: string, trial: Trial };
+
+        console.log(req.user)
         
         if (!(participant_id && trial)) {
             return res.status(400).send("Participant ID and Trial required");

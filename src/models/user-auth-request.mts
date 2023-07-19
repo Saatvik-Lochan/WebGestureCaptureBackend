@@ -2,7 +2,6 @@ import { Request } from "express"
 import { JwtPayload } from "jsonwebtoken"
 
 type ProjectPayload = {
-    project_id: string,
     project_name: string
 }
 

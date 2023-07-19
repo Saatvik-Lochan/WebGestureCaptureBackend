@@ -1,8 +1,7 @@
 import Joi, { required } from "joi";
 
 type Project = {
-    _id?: string;
-    name: string;
+    project_name: string;
     description: string;
     encryptedPass: string;
 

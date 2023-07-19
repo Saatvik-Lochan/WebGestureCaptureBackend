@@ -14,9 +14,9 @@ function getNumberOfProjects(): Promise<number> {
     });
 }
  
-function getProject(name: string): Promise<Project> {
+function getProject(project_name: string): Promise<Project> {
     return new Promise(resolve => {
-        projectDb.findOne({ name }, (err: Error, doc: any) => {
+        projectDb.findOne({ project_name }, (err: Error, doc: any) => {
             if (err) throw err;
             
             resolve(doc);

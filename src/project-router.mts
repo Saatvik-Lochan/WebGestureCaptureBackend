@@ -16,34 +16,34 @@ projectRouter.post("/login", login);
 // set up auth
 async function register(req: Request, res: Response) {
     try {
-        const { name, description, password } = req.body;
+        const { project_name, description, password } = req.body;
 
         if (!await checkRequest(req)) {
             return;
         }
 
-        encryptAndStore(name, description, password);
+        encryptAndStore(project_name, description, password);
     } catch (err) {
         res.status(400).send("Unknown error");
         console.log(err);
     }
 
-    async function encryptAndStore(name: string, description: string, password: string) {
+    async function encryptAndStore(project_name: string, description: string, password: string) {
         const encryptedPass = await hash(password, 10);
 
-        const newProject: Project = {name, description, encryptedPass, participants: []};
+        const newProject: Project = {project_name, description, encryptedPass, participants: []};
         const insertedProj = await addProject(newProject);
         const projWithToken = createAndAddToken(insertedProj);
         res.status(201).json(projWithToken);
     }
 
     async function checkRequest(req: Request): Promise<Boolean> {
-        if (isIncompleteRequest(req.body['name'], req.body['password'])) {
+        if (isIncompleteRequest(req.body['project_name'], req.body['password'])) {
             res.status(400).send("Username and password are both required");
             return false;
         }
         
-        const oldProject = await getProject(req.body['name']);
+        const oldProject = await getProject(req.body['project_name']);
 
         if (oldProject) {
             res.status(409).send("Project with this name already exists");
@@ -74,14 +74,14 @@ async function login(req: Request, res: Response) {
     }
 
     async function validateRequest(req: Request) {
-        const { name, password } = req.body;
+        const { project_name, password } = req.body;
 
-        if (isIncompleteRequest(name, password)) {
+        if (isIncompleteRequest(project_name, password)) {
             res.status(400).send("Username and password are both required");
             return null;
         }
 
-        const proj = await getProject(name);
+        const proj = await getProject(project_name);
 
         if (proj && await compare(password, proj.encryptedPass)) {
             return proj;
@@ -96,17 +96,17 @@ async function login(req: Request, res: Response) {
 }
 
 function createAndAddToken(proj: Project) {
-    if (!proj._id) throw Error("Must pass in an 'inserted project'");
+    if (!proj.project_name) throw Error("Must pass in an 'inserted project'");
 
     const token = jwt.sign(
-        { project_id: proj._id, name: proj.name },
+        { project_name: proj.project_name },
         process.env.TOKEN_KEY,
         {
             expiresIn: "5h"
         }
     );
 
-    addTokenTo(proj.name, token);
+    addTokenTo(proj.project_name, token);
     proj.token = token;
     return proj;
 }
