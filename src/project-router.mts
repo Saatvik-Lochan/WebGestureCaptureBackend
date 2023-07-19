@@ -24,6 +24,7 @@ async function register(req: Request, res: Response) {
 
         encryptAndStore(name, description, password);
     } catch (err) {
+        res.status(400).send("Unknown error");
         console.log(err);
     }
 
@@ -68,6 +69,7 @@ async function login(req: Request, res: Response) {
             res.status(400).send("Invalid credentials");
         }
     } catch (err) {
+        res.status(400).send("Unknown error");
         console.log(err.message);
     }
 
