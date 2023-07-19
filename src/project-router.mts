@@ -52,8 +52,8 @@ async function register(req: Request, res: Response) {
 
         return true;
 
-        function isIncompleteRequest(name: string, password: string) {
-            return !(name && password);
+        function isIncompleteRequest(project_name: string, password: string) {
+            return !(project_name && password);
         } 
     }
 }
@@ -89,8 +89,8 @@ async function login(req: Request, res: Response) {
 
         return null;
 
-        function isIncompleteRequest(name: string, password: string) {
-            return !(name && password);
+        function isIncompleteRequest(project_name: string, password: string) {
+            return !(project_name && password);
         }
     }
 }

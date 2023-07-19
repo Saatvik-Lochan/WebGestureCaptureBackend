@@ -17,7 +17,7 @@ type Participant = {
 
 type Trial = {
     trial_id: string;
-    name: string;
+    trial_name: string;
     options: {
         instructionDuration: number
     };
@@ -30,7 +30,7 @@ type Gesture = {
         instructionDuration: number,
     };
     gesture_id: string;
-    name: string;
+    gesture_name: string;
     instruction: string;
     duration: number;
 };

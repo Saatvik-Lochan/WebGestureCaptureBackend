@@ -34,14 +34,14 @@ function addProject(project: Project): Promise<Project> {
 }
 
 function addTokenTo(project_name: string, token: string) {
-    projectDb.update({ name: project_name }, 
+    projectDb.update({ project_name: project_name }, 
         { $set: {token: token} }, {}
     );
 }
 
 // participant based functions
 function addParticipant(projectName: string, newParticipant: Participant) {
-    projectDb.update({ name: projectName }, { $push: { participants: newParticipant } });
+    projectDb.update({ project_name: projectName }, { $push: { participants: newParticipant } });
 }
 
 function getParticipant(project: Project, participantId: string): Participant {
@@ -55,7 +55,7 @@ function getParticipant(project: Project, participantId: string): Participant {
 }
 
 function setAllParticipants(projectName: string, allParticipants: Participant[]) {
-    projectDb.update({ name: projectName }, { $set: { participants: allParticipants } });
+    projectDb.update({ project_name: projectName }, { $set: { participants: allParticipants } });
 }
 
 // pretty inefficent, preferentially use setAllParticipants and change in bulk
