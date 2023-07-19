@@ -13,6 +13,7 @@ type Participant = {
     participant_id: string;
     pendingTrials: Trial[];
     completedTrialFiles: string[];
+    urlCode?: string;
 };
 
 type Trial = {

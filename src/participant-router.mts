@@ -3,10 +3,12 @@ import { verifyToken } from "./auth.mts";
 import { UserAuthRequest } from "./models/user-auth-request.mts";
 import { addParticipant, getParticipant, getProject, setParticipant } from "./database-util.mts";
 import { Trial, isValidTrial } from "./models/project-model.mts";
+import { randomBytes } from "crypto";
 
 // set up router
 const participantRouter = Router();
 participantRouter.post("/push-trial", verifyToken, addTrial);
+participantRouter.get("/:pid/get-url", verifyToken, getParticipantUrl)
 participantRouter.get("/get-participants", verifyToken, getParticipants);
 
 // participantRouter.post("/add-trial", verifyToken, addTrialToParticipant);
@@ -46,6 +48,29 @@ async function addTrial(req: UserAuthRequest, res: Response) {
         console.log(err.message);
     }
 } 
+
+async function getParticipantUrl(req: UserAuthRequest, res: Response) {
+    function generateUrlCode() {
+        return randomBytes(5).toString('hex')
+    }
+    
+    try{
+        const { project_name } = req.user;
+        const { pid } = req.params;
+
+        const project = await getProject(project_name);
+        const participant = getParticipant(project, pid);
+
+        if (!('urlCode' in participant)) {
+            participant.urlCode = generateUrlCode();
+            setParticipant(project_name, participant);
+        }  
+
+        res.status(200).send(participant.urlCode);
+    } catch (err) {
+        res.status(500).send("Unknown error");
+    }
+}
 
 async function addParticipantFromReq(req: UserAuthRequest, res: Response) {
     try {
