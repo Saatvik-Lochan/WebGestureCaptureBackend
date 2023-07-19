@@ -48,7 +48,7 @@ function getParticipant(project: Project, participantId: string): Participant {
     let outParticipant = null;
 
     project.participants.forEach((participant: Participant) => {
-        if (participant.id === participantId) outParticipant = participant;
+        if (participant.participant_id === participantId) outParticipant = participant;
     });
 
     return outParticipant;
@@ -62,7 +62,7 @@ function setAllParticipants(projectName: string, allParticipants: Participant[])
 async function setParticipant(projectName: string, newParticipant: Participant) {
     const proj = await getProject(projectName);
     proj.participants = proj.participants.map((participant: Participant) => {
-        if (participant.id == newParticipant.id) return newParticipant;
+        if (participant.participant_id == newParticipant.participant_id) return newParticipant;
         else return participant;
     });
     setAllParticipants(projectName, proj.participants);
@@ -73,29 +73,19 @@ function getTrial(participant: Participant, trialId: string): Trial {
     let outTrial = null;
 
     participant.pendingTrials.forEach((trial: Trial) => {
-        if (trial.trialID === trialId) outTrial = trial;
+        if (trial.trial_id === trialId) outTrial = trial;
     });
 
     return outTrial;
 }
 
-function getGesture(trial: Trial, gestureId: string): Gesture {
-    let outGesture = null;
-
-    trial.gestures.forEach((gesture: Gesture) => {
-        if (gesture.id === gestureId) outGesture = gesture;
-    });
-
-    return outGesture;
-}
-
 // removes trial from input participant as well
 function removeTrial(participant: Participant, trialId: string) {
     const newPending = participant.pendingTrials
-        .filter(element => element.trialID != trialId);
+        .filter(element => element.trial_id != trialId);
 
     participant.pendingTrials = newPending;
     return participant;
 }
 
-export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, removeTrial, getGesture };
+export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, removeTrial };

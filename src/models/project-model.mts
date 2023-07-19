@@ -29,22 +29,22 @@ type Trial = {
 type Gesture = {
     options: {
         instructionDuration: number,
-        performDuration: number
     };
-    name: string;
     gesture_id: string;
+    name: string;
     instruction: string;
+    duration: number;
 };
 
 function isValidTrial(trial: Trial) {
     const gestureSchema = Joi.object({
         options: Joi.object({
-            instructionDuration: Joi.number(),
-            performDuration: Joi.number()
+            instructionDuration: Joi.number()
         }),
         name: Joi.string().required(),
         gesture_id: Joi.string().required(),
-        instruction: Joi.string().required()
+        instruction: Joi.string().required(),
+        duration: Joi.number().required()
     });
 
     const trialSchema = Joi.object({
