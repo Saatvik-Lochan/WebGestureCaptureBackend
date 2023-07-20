@@ -13,7 +13,7 @@ testRouter.post("/form-data", upload.single('data'),  getFormData);
 function getFormData(req: Request, res: Response){
     try {
         console.log(req.body);
-        console.log(req.file);
+        console.log(req.file.buffer);
         return res.status(200).send("Complete")
     } catch (err) {
         console.log(err.message);

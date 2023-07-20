@@ -2,8 +2,8 @@ import { Router, Response, Request, NextFunction } from "express";
 import { getParticipantFromUrlCode, getProject, getTrial } from "./database-util.mts";
 import { FileHandle, open } from 'node:fs/promises';
 import Joi from "joi";
-import { Gesture } from "./models/project-model.mts";
 import { GestureDataRequest } from "./models/gesture-data-request.mts";
+import multer from "multer";
 import path from "node:path";
 
 import { fileURLToPath } from 'url';
@@ -11,6 +11,8 @@ import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+const upload = multer();
 
 async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, next: NextFunction) {
     const gestureDataSchema = Joi.object({
@@ -64,6 +66,7 @@ async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, 
 
 const gestureDataRouter = Router();
 gestureDataRouter.post("/start-transfer", verifyGestureDataRequest, startTransfer);
+gestureDataRouter.post("/append-data", verifyGestureDataRequest, upload.single('data'), sendData);
 
 function filePathFromFilename(fileName: string): string {
     return path.join(__dirname, '..', 'files', fileName);
@@ -74,7 +77,7 @@ async function startTransfer(req: GestureDataRequest, res: Response) {
 
     try {
         const filePath = filePathFromFilename(req.file_name);
-        const fileHandle = await open(filePath, 'w');
+        fileHandle = await open(filePath, 'w');
         fileHandle.write("");
         
         return res.status(200).send("transfer started");
@@ -91,12 +94,9 @@ async function sendData(req: GestureDataRequest, res: Response) {
     
     try {
         const filePath = filePathFromFilename(req.file_name);
-        const fileHandle = await open(filePath, 'a');
+        fileHandle = await open(filePath, 'a');
 
-        const { data } = req.body;
-
-        if (!data) return res.status(400).send("Data argument required")
-
+        console.log(req.file);
         
     } catch (err) {
         console.log(err.message);
