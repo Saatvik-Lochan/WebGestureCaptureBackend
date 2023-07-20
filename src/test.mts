@@ -5,13 +5,8 @@ import { parse } from 'csv';
 import multer from "multer";
 const upload = multer();
 
-const datafilename = 'src/rock_paper_scissors.csv';
-const value = fs.readFileSync(datafilename)
-console.log("data has loaded");
-
 // set up router
 const testRouter = Router();
-testRouter.get("/get-csv-data", test);
 testRouter.post("/form-data", upload.single('data'),  getFormData);
 
 
@@ -24,10 +19,6 @@ function getFormData(req: Request, res: Response){
         console.log(err.message);
         return res.status(500).send("Unknown error");
     }
-}
-
-async function test(req, res){
-    res.status(200).send(compress(await unpack(value)));
 }
 
 function unpack(value): Promise<string[][]>{
