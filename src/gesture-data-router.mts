@@ -15,6 +15,8 @@ const __dirname = dirname(__filename);
 const upload = multer();
 
 async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, next: NextFunction) {
+    console.log(req.body);
+
     const gestureDataSchema = Joi.object({
         project_name: Joi.string().required(),
         participant_id: Joi.string().required(),
