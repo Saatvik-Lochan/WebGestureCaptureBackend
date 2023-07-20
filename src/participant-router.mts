@@ -53,13 +53,17 @@ async function getParticipantUrl(req: UserAuthRequest, res: Response) {
     function generateUrlCode() {
         return randomBytes(5).toString('hex')
     }
-    
     try{
         const { project_name } = req.user;
         const { pid } = req.params;
 
+        if (!pid) return res.status(400).send("Participant ID required");
+
         const project = await getProject(project_name);
+        if (!project) return res.status(400).send("Invalid project");
+        
         const participant = getParticipant(project, pid);
+        if (!participant) return res.status(400).send("Invalid participant");
 
         if (!('urlCode' in participant)) {
             participant.urlCode = generateUrlCode();

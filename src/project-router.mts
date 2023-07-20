@@ -1,5 +1,5 @@
 import { Router, Response, Request } from "express";
-import { addProject, getProject, addTokenTo, getParticipant } from "./database-util.mts";
+import { addProject, getProject, addTokenTo } from "./database-util.mts";
 import { hash, compare } from "bcrypt";
 import { Project } from "./models/project-model.mts";
 import jwt from "jsonwebtoken";

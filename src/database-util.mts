@@ -54,6 +54,22 @@ function getParticipant(project: Project, participantId: string): Participant {
     return outParticipant;
 }
 
+function getParticipantFromUrlCode(project: Project, pidAndUrlCode: string) {
+    const regex = /(.*)-(.*)/;
+    const match = pidAndUrlCode.match(regex);
+
+    if (match == null) return null;
+
+    const [pid, urlCode] = match;
+    const participant = getParticipant(project, pid);
+
+    if (participant == null || 
+        !('urlCode' in participant) || 
+        participant.urlCode != urlCode) return null;
+
+    return participant;
+}
+
 function setAllParticipants(projectName: string, allParticipants: Participant[]) {
     projectDb.update({ project_name: projectName }, { $set: { participants: allParticipants } });
 }
@@ -88,4 +104,4 @@ function removeTrial(participant: Participant, trialId: string) {
     return participant;
 }
 
-export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, removeTrial };
+export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, removeTrial, getParticipantFromUrlCode };
