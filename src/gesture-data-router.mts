@@ -95,11 +95,15 @@ async function sendData(req: GestureDataRequest, res: Response) {
     let fileHandle: FileHandle;
     
     try {
+        const dataArray = Array.from(req.file.buffer);
         const filePath = filePathFromFilename(req.file_name);
         fileHandle = await open(filePath, 'a');
 
-        console.log(req.file);
-        
+        while (dataArray.length > 0) {
+            const row = dataArray.splice(0, 26).join(", ") + "\n";
+            console.log(row);
+            fileHandle.appendFile(row);
+        }
     } catch (err) {
         console.log(err.message);
         return res.status(500).send("Unknown error");
