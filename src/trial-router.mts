@@ -51,7 +51,6 @@ async function completeTrial(req: Request, res: Response) {
         }
 
         const trial = getTrial(participant, trialId);
-        console.log(trial);
 
         if (!trial) {
             return res.status(400).send("Unknown trial");
