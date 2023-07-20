@@ -1,6 +1,6 @@
 import { Router, Response, Request, NextFunction } from "express";
 import { getParticipantFromUrlCode, getProject, getTrial } from "./database-util.mts";
-import { open } from 'node:fs/promises';
+import { FileHandle, open } from 'node:fs/promises';
 import Joi from "joi";
 import { Gesture } from "./models/project-model.mts";
 import { GestureDataRequest } from "./models/gesture-data-request.mts";
@@ -52,7 +52,7 @@ async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, 
             return res.status(400).send("Invalid gesture index");
         }
 
-        const file_name = `${project_name}-${participant_id}-${trial_id}-${gesture_index}`;
+        const file_name = `${project_name}-${participant_id}-${trial_id}-${gesture_index}.csv`;
         req.file_name = file_name.replace(/\/|\\/g, "");
 
         next();
@@ -65,17 +65,44 @@ async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, 
 const gestureDataRouter = Router();
 gestureDataRouter.post("/start-transfer", verifyGestureDataRequest, startTransfer);
 
-async function startTransfer(req: GestureDataRequest, res: Response) {
-    try {
-        const filePath = path.join(__dirname, '..', 'files', req.file_name);
-        const fileHandle = await open(filePath, 'w');
-        fileHandle.write("test");
-        fileHandle.close();
+function filePathFromFilename(fileName: string): string {
+    return path.join(__dirname, '..', 'files', fileName);
+}
 
+async function startTransfer(req: GestureDataRequest, res: Response) {
+    let fileHandle: FileHandle;
+
+    try {
+        const filePath = filePathFromFilename(req.file_name);
+        const fileHandle = await open(filePath, 'w');
+        fileHandle.write("");
+        
         return res.status(200).send("transfer started");
     } catch (err) {
         console.log(err.message);
         return res.status(500).send("Unknown error");
+    } finally {
+        if (fileHandle) fileHandle.close();
+    }
+}
+
+async function sendData(req: GestureDataRequest, res: Response) {
+    let fileHandle: FileHandle;
+    
+    try {
+        const filePath = filePathFromFilename(req.file_name);
+        const fileHandle = await open(filePath, 'a');
+
+        const { data } = req.body;
+
+        if (!data) return res.status(400).send("Data argument required")
+
+        
+    } catch (err) {
+        console.log(err.message);
+        return res.status(500).send("Unknown error");
+    } finally {
+        if (fileHandle) fileHandle.close();
     }
 }
 

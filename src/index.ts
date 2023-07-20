@@ -22,6 +22,6 @@ app.use('/project', projectRouter); // handles register and login
 app.use('/participant', participantRouter); // manages participants
 app.use('/trial', trialRouter); // deals with browser side client 
 app.use('/gesture-data', gestureDataRouter) // deals with sending gesture data
-// app.use('/test', testRouter);
+app.use('/test', testRouter);
 
 app.listen(3000);
