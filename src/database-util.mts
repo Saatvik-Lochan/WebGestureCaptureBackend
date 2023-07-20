@@ -55,12 +55,12 @@ function getParticipant(project: Project, participantId: string): Participant {
 }
 
 function getParticipantFromUrlCode(project: Project, pidAndUrlCode: string) {
-    const regex = /(.*)-(.*)/;
+    const regex = /(?<pid>.*)-(?<urlCode>.*)/;
     const match = pidAndUrlCode.match(regex);
 
     if (match == null) return null;
 
-    const [pid, urlCode] = match;
+    const {pid, urlCode} = match.groups;
     const participant = getParticipant(project, pid);
 
     if (participant == null || 
@@ -96,12 +96,19 @@ function getTrial(participant: Participant, trialId: string): Trial {
 }
 
 // removes trial from input participant as well
-function removeTrial(participant: Participant, trialId: string) {
-    const newPending = participant.pendingTrials
-        .filter(element => element.trial_id != trialId);
+function moveTrialToComplete(participant: Participant, trialId: string) {
+    const newPending: Trial[] = [];
+
+    for (let trial of participant.pendingTrials) {
+        if (trial.trial_id == trialId) {
+            participant.completedTrials.push(trial);
+        } else {
+            newPending.push(trial);
+        }
+    }
 
     participant.pendingTrials = newPending;
     return participant;
 }
 
-export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, removeTrial, getParticipantFromUrlCode };
+export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, moveTrialToComplete, getParticipantFromUrlCode };

@@ -1,10 +1,10 @@
 import { Router, Response, Request } from "express";
-import { getParticipant, getProject, getTrial, removeTrial } from "./database-util.mts";
+import { getParticipantFromUrlCode, getProject, getTrial, moveTrialToComplete, setParticipant } from "./database-util.mts";
 
 // set up router
 const trialRouter = Router();
-trialRouter.get("/:projectName/:participantId", getIncompleteTrials);
-trialRouter.post("/:projectName/:participantId/:trialId", completeTrial);
+trialRouter.get("/next-trial/:projectName/:participantId", getIncompleteTrials);
+trialRouter.post("/complete-trial/:projectName/:participantId/:trialId", completeTrial);
 
 async function getIncompleteTrials(req: Request, res: Response) {
     try {
@@ -16,13 +16,17 @@ async function getIncompleteTrials(req: Request, res: Response) {
             return res.status(400).send("Unknown project");
         }
 
-        const participant = getParticipant(proj, participantId);
+        const participant = getParticipantFromUrlCode(proj, participantId);
 
         if (!participant) {
             return res.status(400).send("Unknown participant");
         }
 
-        res.status(200).send(participant.pendingTrials);
+        if (participant.pendingTrials.length == 0)
+            res.status(200).send(null);
+        else
+            res.status(200).send(participant.pendingTrials[0]);
+        
     } catch (err) {
         res.status(500).send("Unknown error");
         console.log(err);
@@ -40,7 +44,7 @@ async function completeTrial(req: Request, res: Response) {
             return res.status(400).send("Unknown project");
         }
 
-        const participant = getParticipant(proj, participantId);
+        const participant = getParticipantFromUrlCode(proj, participantId);
 
         if (!participant) {
             return res.status(400).send("Unknown participant");
@@ -54,12 +58,10 @@ async function completeTrial(req: Request, res: Response) {
         }
 
         // trial is known to be valid after this
-        removeTrial(participant, trialId);
+        const newParticipant = moveTrialToComplete(participant, trialId);
+        setParticipant(projectName, newParticipant);
 
-        // TODO: save request data
-        
-
-        res.send(201).send("Data appended");
+        res.status(200).send("Trial completed");
 
     } catch (err) {
         res.status(500).send("Unknown error");

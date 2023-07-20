@@ -32,7 +32,7 @@ async function addTrial(req: UserAuthRequest, res: Response) {
 
         if (!participant) {
             addParticipant(project_name, 
-                { participant_id, pendingTrials: [trial], completedTrialFiles: []});
+                { participant_id, pendingTrials: [trial], completedTrials: []});
         } else {
             if (participant.pendingTrials.map(trial => trial.trial_id).includes(trial.trial_id)) {
                 return res.status(400).send("Trial of this ID alreay exists")
@@ -89,7 +89,7 @@ async function addParticipantFromReq(req: UserAuthRequest, res: Response) {
         if (oldParticipant) {
             return res.status(400).send("Participant already exists in this project");
         } else {
-            addParticipant(project_name, { participant_id, pendingTrials: [], completedTrialFiles: []});
+            addParticipant(project_name, { participant_id, pendingTrials: [], completedTrials: []});
             return res.status(201).send("Participant added");
         }
 

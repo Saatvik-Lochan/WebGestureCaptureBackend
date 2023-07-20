@@ -12,7 +12,7 @@ type Project = {
 type Participant = {
     participant_id: string;
     pendingTrials: Trial[];
-    completedTrialFiles: string[];
+    completedTrials: Trial[];
     urlCode?: string;
 };
 
