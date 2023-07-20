@@ -67,8 +67,8 @@ async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, 
 }
 
 const gestureDataRouter = Router();
-gestureDataRouter.post("/start-transfer", verifyGestureDataRequest, startTransfer);
-gestureDataRouter.post("/append-data", verifyGestureDataRequest, upload.single('data'), sendData);
+gestureDataRouter.post("/start-transfer", upload.none(), verifyGestureDataRequest, startTransfer);
+gestureDataRouter.post("/append-data", upload.single('data'), verifyGestureDataRequest, sendData);
 
 function filePathFromFilename(fileName: string): string {
     return path.join(__dirname, '..', 'files', fileName);
