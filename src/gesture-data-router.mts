@@ -96,6 +96,7 @@ async function sendData(req: GestureDataRequest, res: Response) {
     
     try {
         const dataArray = Array.from(req.file.buffer);
+        console.log(dataArray);
         const filePath = filePathFromFilename(req.file_name);
         fileHandle = await open(filePath, 'a');
 
