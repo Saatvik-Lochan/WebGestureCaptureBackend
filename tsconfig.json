@@ -2,8 +2,8 @@
     "compilerOptions": {
        "allowImportingTsExtensions": true,
        "noEmit": true,
-       "target": "es6",
-       "module": "es6",
+       "target": "ES2022",
+       "module": "ES2022",
        "types": ["node", "express"],
        "allowSyntheticDefaultImports": true,
        "esModuleInterop": true,

@@ -3,6 +3,7 @@ import { projectRouter } from './project-router.mts';
 import { participantRouter } from './participant-router.mts';
 import { trialRouter } from './trial-router.mts';
 import { testRouter } from './test.mts';
+import { gestureDataRouter } from './gesture-data-router.mts';
 // import { appendDataRouter } from './append-data-router.mts';
 
 const app = express();
@@ -20,7 +21,7 @@ app.all("*", (_, res: express.Response, next: () => any) => {
 app.use('/project', projectRouter); // handles register and login
 app.use('/participant', participantRouter); // manages participants
 app.use('/trial', trialRouter); // deals with browser side client 
-// app.use('/data', appendDataRouter); // deals with browser data transfer 
+app.use('/gesture-data', gestureDataRouter) // deals with sending gesture data
 // app.use('/test', testRouter);
 
 app.listen(3000);

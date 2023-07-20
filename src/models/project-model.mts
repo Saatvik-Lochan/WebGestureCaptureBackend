@@ -1,4 +1,4 @@
-import Joi, { required } from "joi";
+import Joi from "joi";
 
 type Project = {
     project_name: string;
@@ -34,6 +34,7 @@ type Gesture = {
     gesture_name: string;
     instruction: string;
     duration: number;
+    completed?: boolean;
 };
 
 function isValidTrial(trial: Trial) {

@@ -4,6 +4,7 @@
   "description": "backend for the corresponding webgesturebackend",
   "main": "index.ts",
   "type": "module",
+  "module": "es2022",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon -e ts,mts src/index.ts"
