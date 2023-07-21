@@ -42,7 +42,7 @@ async function verifyGestureDataDownloadRequest(req: GestureDataDownloadRequest,
 
         if (req.participant == null) return res.status(400).send("Unknown participant");
 
-        req.trial = getCompletedTrial(req.participant, trial_id);
+        req.trial = getTrial(req.participant, trial_id);
 
         if (req.trial == null) return res.status(400).send("No such completed trial");
 
@@ -159,7 +159,7 @@ async function sendData(req: GestureDataRequest, res: Response) {
     }
 }
 
-async function getGestureData(req: GestureDataRequest, res: Response) {
+async function getGestureData(req: GestureDataDownloadRequest, res: Response) {
     try {
         const filePath = filePathFromFilename(req.file_name);
         res.status(200).sendFile(filePath);
