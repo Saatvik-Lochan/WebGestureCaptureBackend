@@ -1,5 +1,5 @@
 import Datastore from "nedb"
-import { Gesture, Participant, Project, Trial } from "./models/project-model.mts";
+import { Participant, Project, Trial } from "./models/project-model.mts";
 
 // set up database
 const projectDb = new Datastore({
@@ -84,6 +84,16 @@ async function setParticipant(projectName: string, newParticipant: Participant) 
     setAllParticipants(projectName, proj.participants);
 }
 
+function getCompletedTrial(participant: Participant, trialId: string): Trial {
+    let outTrial = null;
+
+    participant.completedTrials.forEach((trial: Trial) => {
+        if (trial.trial_id === trialId) outTrial = trial;
+    });
+
+    return outTrial;
+}
+
 // trial based functions
 function getTrial(participant: Participant, trialId: string): Trial {
     let outTrial = null;
@@ -111,4 +121,4 @@ function moveTrialToComplete(participant: Participant, trialId: string) {
     return participant;
 }
 
-export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, moveTrialToComplete, getParticipantFromUrlCode };
+export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, moveTrialToComplete, getParticipantFromUrlCode, getCompletedTrial };
