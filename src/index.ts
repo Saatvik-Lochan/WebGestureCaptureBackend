@@ -35,7 +35,7 @@ if (process.env.USE_CERTIFICATE == "true") {
     console.log(process.env.SSL_CERTIFICATE)
     
     const options = {
-        key: fs.readFileSync(process.env.SSL_CERTIFICATE),
+        key: fs.readFileSync(process.env.SSL_KEY),
         cert: fs.readFileSync(process.env.SSL_CERTIFICATE)
     };
 
