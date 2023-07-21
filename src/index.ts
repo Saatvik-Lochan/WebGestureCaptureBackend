@@ -37,7 +37,7 @@ if (process.env.USE_CERTIFICATE == "true") {
         cert: fs.readFileSync(process.env.SSL_CERTIFICATE)
     };
 
-    https.createServer(options).listen(8000, () => {
+    https.createServer(options, app).listen(8000, () => {
         console.log("Server listening on port 8000 https")
     });
 } else {
