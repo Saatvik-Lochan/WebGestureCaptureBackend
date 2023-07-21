@@ -103,7 +103,7 @@ async function sendData(req: GestureDataRequest, res: Response) {
         fileHandle = await open(filePath, 'a');
 
         while (dataArray.length > 0) {
-            const row = dataArray.splice(0, 26).join(", ") + "\n";
+            const row = dataArray.splice(0, 26).join(",") + "\n";
             fileHandle.appendFile(row);
         }
     } catch (err) {
