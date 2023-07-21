@@ -39,7 +39,11 @@ if (process.env.USE_CERTIFICATE == "true") {
     https.createServer(options, (req, res) => {
         res.writeHead(200);
         res.end(`hello world\n`);
-    }).listen(8000);
+    }).listen(8000, () => {
+        console.log("Server listening on port 8000 https")
+    });
 } else {
-    app.listen(3000);
+    app.listen(3000, () => {
+        console.log("Server listening on port 3000")
+    });
 }
