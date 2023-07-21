@@ -1,8 +1,9 @@
-import { Router, Response, Request, NextFunction } from "express";
-import { getCompletedTrial, getParticipant, getParticipantFromUrlCode, getProject, getTrial } from "./database-util.mts";
+import { Router, Response, NextFunction } from "express";
+import { getParticipant, getParticipantFromUrlCode, getProject, getTrial } from "./database-util.mts";
 import { FileHandle, open } from 'node:fs/promises';
-import Joi from "joi";
 import { GestureDataDownloadRequest, GestureDataRequest } from "./models/gesture-data-request.mts";
+
+import Joi from "joi";
 import multer from "multer";
 import path from "node:path";
 
@@ -100,7 +101,7 @@ async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, 
             return res.status(400).send("Invalid gesture index");
         }
 
-        const file_name = `${project_name}-${participant_id}-${trial_id}-${gesture_index}.csv`;
+        const file_name = `${project_name}-${req.participant.participant_id}-${trial_id}-${gesture_index}.csv`;
         req.file_name = file_name.replace(/\/|\\/g, "");
 
         next();

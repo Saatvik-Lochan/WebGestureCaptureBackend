@@ -54,9 +54,13 @@ function getParticipant(project: Project, participantId: string): Participant {
     return outParticipant;
 }
 
-function getParticipantFromUrlCode(project: Project, pidAndUrlCode: string) {
+function getPidAndUrlCode(pidAndUrlCode: string) {
     const regex = /(?<pid>.*)-(?<urlCode>.*)/;
-    const match = pidAndUrlCode.match(regex);
+    return pidAndUrlCode.match(regex);
+}
+
+function getParticipantFromUrlCode(project: Project, pidAndUrlCode: string) {
+    const match = getPidAndUrlCode(pidAndUrlCode);
 
     if (match == null) return null;
 
@@ -121,4 +125,4 @@ function moveTrialToComplete(participant: Participant, trialId: string) {
     return participant;
 }
 
-export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, moveTrialToComplete, getParticipantFromUrlCode, getCompletedTrial };
+export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, moveTrialToComplete, getParticipantFromUrlCode, getCompletedTrial, getPidAndUrlCode };
