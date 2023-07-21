@@ -1,5 +1,5 @@
 import { Router, Response, NextFunction } from "express";
-import { getParticipant, getParticipantFromUrlCode, getProject, getTrial } from "./database-util.mts";
+import { getCompletedTrial, getParticipant, getParticipantFromUrlCode, getProject, getTrial } from "./database-util.mts";
 import { FileHandle, open } from 'node:fs/promises';
 import { GestureDataDownloadRequest, GestureDataRequest } from "./models/gesture-data-request.mts";
 
@@ -43,7 +43,7 @@ async function verifyGestureDataDownloadRequest(req: GestureDataDownloadRequest,
 
         if (req.participant == null) return res.status(400).send("Unknown participant");
 
-        req.trial = getTrial(req.participant, trial_id);
+        req.trial = getCompletedTrial(req.participant, trial_id);
 
         if (req.trial == null) return res.status(400).send("No such completed trial");
 

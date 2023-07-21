@@ -1,5 +1,4 @@
 import { Request } from "express"
-import { JwtPayload } from "jsonwebtoken"
 
 type ProjectPayload = {
     project_name: string
