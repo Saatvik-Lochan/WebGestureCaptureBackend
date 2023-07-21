@@ -31,19 +31,14 @@ app.use('/gesture-data', gestureDataRouter) // deals with sending gesture data
 app.use('/test', testRouter);
 
 if (process.env.USE_CERTIFICATE == "true") {
-    console.log(process.env.SSL_CERTIFICATE)
-    console.log(process.env.SSL_CERTIFICATE)
     
     const options = {
         key: fs.readFileSync(process.env.SSL_KEY),
         cert: fs.readFileSync(process.env.SSL_CERTIFICATE)
     };
 
-    https.createServer(options, (req, res) => {
-        res.writeHead(200);
-        res.end(`hello world\n`);
-    }).listen(8000, () => {
-        console.log("Server listening on port 80 https")
+    https.createServer(options).listen(8000, () => {
+        console.log("Server listening on port 8000 https")
     });
 } else {
     app.listen(3000, () => {
