@@ -4,7 +4,13 @@ import { participantRouter } from './participant-router.mts';
 import { trialRouter } from './trial-router.mts';
 import { testRouter } from './test.mts';
 import { gestureDataRouter } from './gesture-data-router.mts';
+import fs from 'fs';
+import dotenv from 'dotenv';
+import https from 'https';
 // import { appendDataRouter } from './append-data-router.mts';
+
+dotenv.config();
+
 
 const app = express();
 
@@ -24,4 +30,16 @@ app.use('/trial', trialRouter); // deals with browser side client
 app.use('/gesture-data', gestureDataRouter) // deals with sending gesture data
 app.use('/test', testRouter);
 
-app.listen(3000);
+if (process.env.USE_CERTIFICATE == "true") {
+    const options = {
+        key: fs.readFileSync(process.env.KEY),
+        cert: fs.readFileSync(process.env.SSL_CERTIFICATE)
+    };
+
+    https.createServer(options, (req, res) => {
+        res.writeHead(200);
+        res.end(`hello world\n`);
+    }).listen(8000);
+} else {
+    app.listen(3000);
+}
