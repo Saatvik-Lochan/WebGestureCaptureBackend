@@ -42,7 +42,7 @@ if (process.env.USE_CERTIFICATE == "true") {
     https.createServer(options, (req, res) => {
         res.writeHead(200);
         res.end(`hello world\n`);
-    }).listen(80, () => {
+    }).listen(8000, () => {
         console.log("Server listening on port 80 https")
     });
 } else {
