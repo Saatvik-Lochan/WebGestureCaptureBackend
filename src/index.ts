@@ -31,8 +31,11 @@ app.use('/gesture-data', gestureDataRouter) // deals with sending gesture data
 app.use('/test', testRouter);
 
 if (process.env.USE_CERTIFICATE == "true") {
+    console.log(process.env.SSL_CERTIFICATE)
+    console.log(process.env.SSL_CERTIFICATE)
+    
     const options = {
-        key: fs.readFileSync(process.env.KEY),
+        key: fs.readFileSync(process.env.SSL_CERTIFICATE),
         cert: fs.readFileSync(process.env.SSL_CERTIFICATE)
     };
 
