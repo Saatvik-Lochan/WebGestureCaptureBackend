@@ -92,6 +92,8 @@ async function startTransfer(req: GestureDataRequest, res: Response) {
 }
 
 async function sendData(req: GestureDataRequest, res: Response) {
+    console.log("received append-data request!");
+
     let fileHandle: FileHandle;
     
     try {
