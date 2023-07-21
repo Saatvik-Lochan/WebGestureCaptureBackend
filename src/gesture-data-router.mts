@@ -98,13 +98,12 @@ async function sendData(req: GestureDataRequest, res: Response) {
     
     try {
         const dataArray = Array.from(new Float32Array(req.file.buffer.buffer));
-        console.log(dataArray.slice(0, 100));
+        console.log(dataArray);
         const filePath = filePathFromFilename(req.file_name);
         fileHandle = await open(filePath, 'a');
 
         while (dataArray.length > 0) {
             const row = dataArray.splice(0, 26).join(", ") + "\n";
-            console.log(row);
             fileHandle.appendFile(row);
         }
     } catch (err) {
