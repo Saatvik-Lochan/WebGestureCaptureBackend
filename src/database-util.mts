@@ -127,13 +127,13 @@ function moveTrialToComplete(participant: Participant, trialId: string) {
 
 // aggregating functions
 function getAllCompletedTrialsFromProject(project: Project) {
-    let outList: string[] = [];
+    let outList: Trial[] = [];
 
     project.participants.forEach(participant => {
-        outList = [...outList, ...participant.completedTrials.map(trial => trial.trial_id)];
+        outList = [...outList, ...participant.completedTrials];
     });
 
-    return outList;
+    return outList.map(trial => trial.trial_id);
 }
 
 export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, moveTrialToComplete, getParticipantFromUrlCode, getCompletedTrial, getPidAndUrlCode, getAllCompletedTrialsFromProject };
