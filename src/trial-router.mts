@@ -3,10 +3,10 @@ import { getParticipantFromUrlCode, getProject, getTrial, moveTrialToComplete, s
 
 // set up router
 const trialRouter = Router();
-trialRouter.get("/next-trial/:projectName/:participantId", getIncompleteTrials);
+trialRouter.get("/next-trial/:projectName/:participantId", getNextTrial);
 trialRouter.post("/complete-trial/:projectName/:participantId/:trialId", completeTrial);
 
-async function getIncompleteTrials(req: Request, res: Response) {
+async function getNextTrial(req: Request, res: Response) {
     try {
         const { projectName, participantId } = req.params;
         
