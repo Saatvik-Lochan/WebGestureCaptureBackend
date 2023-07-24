@@ -33,7 +33,7 @@ async function verifyGestureDataDownloadRequest(req: GestureDataDownloadRequest,
         req.file_name = file_name.replace(/\/|\\/g, "");
 
         console.log(`requesting file: ${req.file_name}`)
-        if (!existsSync(req.file_name)) {
+        if (!existsSync(filePathFromFilename(req.file_name))) {
             return res.status(400).send("This gesture has not been completed or does not exist");
         }
 
