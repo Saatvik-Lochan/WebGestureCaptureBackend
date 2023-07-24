@@ -61,6 +61,7 @@ async function completeTrial(req: Request, res: Response) {
         setParticipant(projectName, newParticipant);
 
         res.status(200).send("Trial completed");
+        console.log("Completed a trial");
 
     } catch (err) {
         res.status(500).send("Unknown error");
