@@ -3,10 +3,6 @@ import { Gesture, Participant, Project, Trial } from "./project-model.mts";
 import { UserAuthRequest } from "./user-auth-request.mts";
 
 interface GestureDataDownloadRequest extends UserAuthRequest {
-    project: Project;
-    participant: Participant;
-    trial: Trial;
-    gesture: Gesture;
     file_name: string;
 }
 

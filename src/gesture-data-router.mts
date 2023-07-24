@@ -91,7 +91,8 @@ async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, 
 const gestureDataRouter = Router();
 gestureDataRouter.post("/start-transfer", upload.none(), verifyGestureDataRequest, startTransfer);
 gestureDataRouter.post("/append-data", upload.single('data'), verifyGestureDataRequest, sendData);
-gestureDataRouter.get("/get-gesture/:trial_id/:gesture_index", verifyToken, verifyGestureDataDownloadRequest, getGestureData)
+gestureDataRouter.get("/get-gesture/:participant_id/:trial_id/:gesture_index", 
+        verifyToken, verifyGestureDataDownloadRequest, getGestureData)
 
 function filePathFromFilename(fileName: string): string {
     return path.join(__dirname, '..', 'files', fileName);
