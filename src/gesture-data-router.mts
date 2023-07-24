@@ -52,7 +52,7 @@ async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, 
         Joi.assert(req.body, gestureDataSchema);
     } catch (err) {
         console.log(err.message);
-        return res.status(400).send("Request misisng parameters");
+        return res.status(400).send("Request is misisng parameters");
     }
 
     try {
