@@ -32,6 +32,7 @@ async function verifyGestureDataDownloadRequest(req: GestureDataDownloadRequest,
         const file_name = `${project_name}-${participant_id}-${trial_id}-${gesture_index}.csv`;
         req.file_name = file_name.replace(/\/|\\/g, "");
 
+        console.log(`requesting file: ${req.file_name}`)
         if (!existsSync(req.file_name)) {
             return res.status(400).send("This gesture has not been completed or does not exist");
         }
