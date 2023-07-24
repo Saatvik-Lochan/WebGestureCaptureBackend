@@ -125,4 +125,15 @@ function moveTrialToComplete(participant: Participant, trialId: string) {
     return participant;
 }
 
-export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, moveTrialToComplete, getParticipantFromUrlCode, getCompletedTrial, getPidAndUrlCode };
+// aggregating functions
+function getAllCompletedTrialsFromProject(project: Project) {
+    let outList: string[] = [];
+
+    project.participants.forEach(participant => {
+        outList = [...outList, ...participant.completedTrials.map(trial => trial.trial_id)];
+    });
+
+    return outList;
+}
+
+export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, moveTrialToComplete, getParticipantFromUrlCode, getCompletedTrial, getPidAndUrlCode, getAllCompletedTrialsFromProject };

@@ -1,6 +1,7 @@
 import { Router, Response, NextFunction } from "express";
 import { getCompletedTrial, getParticipant, getParticipantFromUrlCode, getProject, getTrial } from "./database-util.mts";
 import { FileHandle, open } from 'node:fs/promises';
+import { existsSync } from "node:fs";
 import { GestureDataDownloadRequest, GestureDataRequest } from "./models/gesture-data-request.mts";
 
 import Joi from "joi";
@@ -25,39 +26,15 @@ const gestureDataBaseSchema = Joi.object({
 
 async function verifyGestureDataDownloadRequest(req: GestureDataDownloadRequest, res: Response, next: NextFunction) {
     try {
-        Joi.assert(req.body, gestureDataBaseSchema);
-    } catch (err) {
-        console.log(err.message);
-        return res.status(400).send("Request misisng parameters");
-    }
-
-    try {
-        const { participant_id, trial_id, gesture_index } = req.body;
+        const { participant_id, trial_id, gesture_index } = req.params;
         const { project_name } = req.user;
-
-        req.project = await getProject(project_name);
-        
-        if (req.project == null) return res.status(400).send("Unknown project");
-
-        req.participant = getParticipant(req.project, participant_id);
-
-        if (req.participant == null) return res.status(400).send("Unknown participant");
-
-        req.trial = getCompletedTrial(req.participant, trial_id);
-
-        if (req.trial == null) return res.status(400).send("No such completed trial");
-
-        if (gesture_index < 0 || req.trial.gestures.length <= gesture_index)
-            return res.status(400).send("gesture index is out of bounds")
-
-        try {
-            req.gesture = req.trial.gestures[gesture_index];
-        } catch (err) {
-            return res.status(400).send("Invalid gesture index");
-        }
 
         const file_name = `${project_name}-${participant_id}-${trial_id}-${gesture_index}.csv`;
         req.file_name = file_name.replace(/\/|\\/g, "");
+
+        if (!existsSync(req.file_name)) {
+            return res.status(400).send("This gesture has not been completed or does not exist");
+        }
 
         next();
     } catch (err) {
@@ -114,7 +91,7 @@ async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, 
 const gestureDataRouter = Router();
 gestureDataRouter.post("/start-transfer", upload.none(), verifyGestureDataRequest, startTransfer);
 gestureDataRouter.post("/append-data", upload.single('data'), verifyGestureDataRequest, sendData);
-gestureDataRouter.get("/get-gesture", verifyToken, verifyGestureDataDownloadRequest, getGestureData)
+gestureDataRouter.get("/get-gesture/:trial_id/:gesture_index", verifyToken, verifyGestureDataDownloadRequest, getGestureData)
 
 function filePathFromFilename(fileName: string): string {
     return path.join(__dirname, '..', 'files', fileName);
