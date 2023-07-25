@@ -52,21 +52,26 @@ async function addTrial(req: UserAuthRequest, res: Response) {
 } 
 
 async function removeTrial(req: UserAuthRequest, res: Response) {
-    const { project_name } = req.user;
-    const { participant_id, trial_id } = req.body;
+    try {
+        const { project_name } = req.user;
+        const { participant_id, trial_id } = req.body;
 
-    if (!(participant_id && trial_id)) {
-        return res.status(400).send("Participant and Trial ID required");
-    } 
+        if (!(participant_id && trial_id)) {
+            return res.status(400).send("Participant and Trial ID required");
+        } 
 
-    const project = await getProject(project_name);
-    if (!project) return res.status(400).send("Invalid project");
-        
-    let participant = getParticipant(project, participant_id);
-    if (!participant) return res.status(400).send("Invalid participant");
+        const project = await getProject(project_name);
+        if (!project) return res.status(400).send("Invalid project");
+            
+        let participant = getParticipant(project, participant_id);
+        if (!participant) return res.status(400).send("Invalid participant");
 
-    participant = removeTrialFromParticipant(participant, trial_id);
-    setParticipant(project_name, participant)
+        participant = removeTrialFromParticipant(participant, trial_id);
+        setParticipant(project_name, participant);
+        return res.status(200).send("Trial cancelled");
+    } catch (err) {
+        return res.status(500).send("Unknown error");
+    }
 }
 
 async function getParticipantUrl(req: UserAuthRequest, res: Response) {
