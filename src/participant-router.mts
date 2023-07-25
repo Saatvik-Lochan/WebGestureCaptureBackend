@@ -1,7 +1,7 @@
 import { Router, Response, Request } from "express";
 import { verifyToken } from "./auth.mts";
 import { UserAuthRequest } from "./models/user-auth-request.mts";
-import { addParticipant, getAllCompletedTrialsFromProject, getParticipant, getProject, setParticipant } from "./database-util.mts";
+import { addParticipant, getAllCompletedTrialsFromProject, getParticipant, getProject, removeTrialFromParticipant, setParticipant } from "./database-util.mts";
 import { Trial, isValidTrial } from "./models/project-model.mts";
 import { randomBytes } from "crypto";
 
@@ -11,6 +11,7 @@ participantRouter.post("/push-trial", verifyToken, addTrial);
 participantRouter.get("/:pid/get-url", verifyToken, getParticipantUrl)
 participantRouter.get("/get-participants", verifyToken, getParticipants);
 participantRouter.get("/get-completed-trials", verifyToken, getCompletedTrials);
+participantRouter.post("/cancel-trial", verifyToken, removeTrial);
 
 // participantRouter.post("/add-trial", verifyToken, addTrialToParticipant);
 // participantRouter.post("/add-participant", verifyToken, addParticipantFromReq);
@@ -49,6 +50,24 @@ async function addTrial(req: UserAuthRequest, res: Response) {
         console.log(err.message);
     }
 } 
+
+async function removeTrial(req: UserAuthRequest, res: Response) {
+    const { project_name } = req.user;
+    const { participant_id, trial_id } = req.body;
+
+    if (!(participant_id && trial_id)) {
+        return res.status(400).send("Participant and Trial ID required");
+    } 
+
+    const project = await getProject(project_name);
+    if (!project) return res.status(400).send("Invalid project");
+        
+    let participant = getParticipant(project, participant_id);
+    if (!participant) return res.status(400).send("Invalid participant");
+
+    participant = removeTrialFromParticipant(participant, trial_id);
+    setParticipant(project_name, participant)
+}
 
 async function getParticipantUrl(req: UserAuthRequest, res: Response) {
     function generateUrlCode() {

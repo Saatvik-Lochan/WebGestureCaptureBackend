@@ -125,6 +125,16 @@ function moveTrialToComplete(participant: Participant, trialId: string) {
     return participant;
 }
 
+function removeTrialFromParticipant(participant: Participant, trialId: string) {
+    participant.completedTrials = removeTrialFromList(participant.completedTrials);
+    participant.pendingTrials = removeTrialFromList(participant.pendingTrials);
+    return participant;
+
+    function removeTrialFromList(trialList: Trial[]) {
+        return trialList.filter(trial => trial.trial_id != trialId);
+    }
+}
+
 // aggregating functions
 function getAllCompletedTrialsFromProject(project: Project) {
     let outList: Trial[] = [];
@@ -136,4 +146,4 @@ function getAllCompletedTrialsFromProject(project: Project) {
     return outList.map(trial => trial.trial_id);
 }
 
-export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, moveTrialToComplete, getParticipantFromUrlCode, getCompletedTrial, getPidAndUrlCode, getAllCompletedTrialsFromProject };
+export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, moveTrialToComplete, getParticipantFromUrlCode, getCompletedTrial, getPidAndUrlCode, getAllCompletedTrialsFromProject, removeTrialFromParticipant };
