@@ -11,7 +11,7 @@ participantRouter.post("/push-trial", verifyToken, addTrial);
 participantRouter.get("/:pid/get-url", verifyToken, getParticipantUrl)
 participantRouter.get("/get-participants", verifyToken, getParticipants);
 participantRouter.get("/get-completed-trials", verifyToken, getCompletedTrials);
-participantRouter.post("/cancel-trial", verifyToken, removeTrial);
+participantRouter.post("/remove-trial", verifyToken, removeTrial);
 
 // participantRouter.post("/add-trial", verifyToken, addTrialToParticipant);
 // participantRouter.post("/add-participant", verifyToken, addParticipantFromReq);
