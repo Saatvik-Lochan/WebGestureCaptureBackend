@@ -68,7 +68,8 @@ async function removeTrial(req: UserAuthRequest, res: Response) {
 
         participant = removeTrialFromParticipant(participant, trial_id);
         setParticipant(project_name, participant);
-        return res.status(200).send("Trial cancelled");
+        console.log(`Trial ${trial_id} was removed`);
+        return res.status(200).send("Trial removed");
     } catch (err) {
         return res.status(500).send("Unknown error");
     }
