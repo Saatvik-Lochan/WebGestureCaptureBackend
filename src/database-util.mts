@@ -112,6 +112,7 @@ function getTrial(participant: Participant, trialId: string): Trial {
 // removes trial from input participant as well
 function moveTrialToComplete(participant: Participant, trialId: string) {
     const newPending: Trial[] = [];
+    console.log(participant)
 
     for (let trial of participant.pendingTrials) {
         if (trial.trial_id == trialId) {
@@ -122,6 +123,7 @@ function moveTrialToComplete(participant: Participant, trialId: string) {
     }
 
     participant.pendingTrials = newPending;
+    console.log(participant)
     return participant;
 }
 
