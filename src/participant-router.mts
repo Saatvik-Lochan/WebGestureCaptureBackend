@@ -53,6 +53,8 @@ async function addTrial(req: UserAuthRequest, res: Response) {
 
 async function removeTrial(req: UserAuthRequest, res: Response) {
     try {
+        console.log("Received remove request");
+
         const { project_name } = req.user;
         const { participant_id, trial_id } = req.body;
 
