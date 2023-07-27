@@ -23,7 +23,7 @@ async function getNextTrial(req: Request, res: Response) {
         }
 
         if (participant.pendingTrials.length == 0)
-            res.status(200).send(null);
+            res.status(404).send("No pending trials");
         else
             res.status(200).send(participant.pendingTrials[0]);
         
