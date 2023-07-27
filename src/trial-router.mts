@@ -58,7 +58,7 @@ async function completeTrial(req: Request, res: Response) {
 
         // trial is known to be valid after this
         const newParticipant = moveTrialToComplete(participant, trialId);
-        setParticipant(projectName, newParticipant);
+        await setParticipant(projectName, newParticipant);
 
         res.status(200).send("Trial completed");
         console.log("Completed a trial");
