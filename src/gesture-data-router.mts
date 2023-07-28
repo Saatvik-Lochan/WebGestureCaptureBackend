@@ -138,6 +138,7 @@ async function sendData(req: GestureDataRequest, res: Response) {
         }
 
         fileHandle.appendFile(dataArray.join(","));
+        return res.status(201).send("Data received");
     } catch (err) {
         console.log(err.message);
         return res.status(500).send("Unknown error");

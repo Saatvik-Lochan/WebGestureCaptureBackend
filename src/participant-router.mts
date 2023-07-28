@@ -47,7 +47,7 @@ async function addTrial(req: UserAuthRequest, res: Response) {
         return res.status(201).send("Trial added successfully");
     } catch (err) {
         res.status(500).send("Unknown error")
-        console.log(err.message);
+        console.log(err);
     }
 } 
 
