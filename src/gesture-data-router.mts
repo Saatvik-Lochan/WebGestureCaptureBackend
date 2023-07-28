@@ -56,10 +56,10 @@ async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, 
     }
 
     try {
-        console.log("I reached here 1");
         const {project_name, participant_id, trial_id, gesture_index} = req.body;
-
+        
         req.project = await getProject(project_name);
+        console.log("I reached here");
         
         if (req.project == null) return res.status(400).send("Unknown project");
 
@@ -74,19 +74,14 @@ async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, 
         if (gesture_index < 0 || req.trial.gestures.length <= gesture_index)
             return res.status(400).send("gesture index is out of bounds")
 
-        console.log("I reached here 2");
-
         try {
             req.gesture = req.trial.gestures[gesture_index];
         } catch (err) {
             return res.status(400).send("Invalid gesture index");
         }
 
-        console.log("I reached here 3");
-
         const file_name = `${project_name}-${req.participant.participant_id}-${trial_id}-${gesture_index}.csv`;
         req.file_name = file_name.replace(/\/|\\/g, "");
-        console.log("I got this far");
 
         next();
     } catch (err) {
