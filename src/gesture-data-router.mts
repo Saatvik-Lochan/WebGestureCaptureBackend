@@ -66,6 +66,8 @@ async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, 
         
         if (req.participant == null) return res.status(400).send("Unknown participant");
         
+        console.log(req.participant)
+        console.log(trial_id);
         req.trial = getTrial(req.participant, trial_id);
         
         console.log(req.trial);
