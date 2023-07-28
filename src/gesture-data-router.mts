@@ -59,9 +59,9 @@ async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, 
         const {project_name, participant_id, trial_id, gesture_index} = req.body;
         
         req.project = await getProject(project_name);
-        console.log("I reached here");
         
         if (req.project == null) return res.status(400).send("Unknown project");
+        console.log("I reached here");
 
         req.participant = getParticipantFromUrlCode(req.project, participant_id);
 
