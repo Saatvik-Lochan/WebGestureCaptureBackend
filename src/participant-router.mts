@@ -30,6 +30,9 @@ async function addTrial(req: UserAuthRequest, res: Response) {
         }
 
         const project = await getProject(project_name);
+
+        if (!project) return res.status(400).send("Invalid project")
+
         const participant = getParticipant(project, participant_id);
 
         if (!participant) {
