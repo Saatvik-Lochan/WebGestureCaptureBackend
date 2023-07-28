@@ -66,12 +66,9 @@ async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, 
         
         if (req.participant == null) return res.status(400).send("Unknown participant");
         
-        console.log(trial_id);
         req.trial = getTrial(req.participant, trial_id);
         
-        console.log(req.trial);
         if (req.trial == null) return res.status(400).send("Unknown trial");
-        console.log("I reached here");
         
         if (gesture_index < 0 || req.trial.gestures.length <= gesture_index)
         return res.status(400).send("gesture index is out of bounds")
