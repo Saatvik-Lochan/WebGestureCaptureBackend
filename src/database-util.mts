@@ -92,7 +92,7 @@ function getCompletedTrial(participant: Participant, trialId: string): Trial {
     let outTrial = null;
 
     participant.completedTrials.forEach((trial: Trial) => {
-        if (trial.trial_id === trialId) outTrial = trial;
+        if (trial.trial_id == trialId) outTrial = trial;
     });
 
     return outTrial;
@@ -103,7 +103,7 @@ function getTrial(participant: Participant, trialId: string): Trial {
     let outTrial = null;
 
     participant.pendingTrials.forEach((trial: Trial) => {
-        if (trial.trial_id === trialId) outTrial = trial;
+        if (trial.trial_id == trialId) outTrial = trial;
     });
 
     return outTrial;
