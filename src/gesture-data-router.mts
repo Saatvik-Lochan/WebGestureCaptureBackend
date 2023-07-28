@@ -61,19 +61,19 @@ async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, 
         req.project = await getProject(project_name);
         
         if (req.project == null) return res.status(400).send("Unknown project");
-        console.log("I reached here");
-
+        
         req.participant = getParticipantFromUrlCode(req.project, participant_id);
-
+        
         if (req.participant == null) return res.status(400).send("Unknown participant");
-
+        
         req.trial = getTrial(req.participant, trial_id);
-
+        
         if (req.trial == null) return res.status(400).send("Unknown trial");
-
+        
         if (gesture_index < 0 || req.trial.gestures.length <= gesture_index)
-            return res.status(400).send("gesture index is out of bounds")
-
+        return res.status(400).send("gesture index is out of bounds")
+        
+        console.log("I reached here");
         try {
             req.gesture = req.trial.gestures[gesture_index];
         } catch (err) {
