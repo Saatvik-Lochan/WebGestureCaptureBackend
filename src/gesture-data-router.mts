@@ -1,6 +1,6 @@
 import { Router, Response, NextFunction } from "express";
-import { getCompletedTrial, getParticipant, getParticipantFromUrlCode, getProject, getTrial } from "./database-util.mts";
-import { FileHandle, open } from 'node:fs/promises';
+import { getParticipantFromUrlCode, getProject, getTrial } from "./database-util.mts";
+import { FileHandle, open, appendFile } from 'node:fs/promises';
 import { existsSync } from "node:fs";
 import { GestureDataDownloadRequest, GestureDataRequest } from "./models/gesture-data-request.mts";
 
@@ -99,6 +99,27 @@ function filePathFromFilename(fileName: string): string {
     return path.join(__dirname, '..', 'files', fileName);
 }
 
+async function appendArrayToFile(filePath: string, buffer: ArrayBuffer) {
+    let fileHandle: FileHandle;
+
+    try {
+        const dataArray = Array.from(new Float32Array(buffer));
+        console.log(dataArray.length);
+        fileHandle = await open(filePath, 'a');
+
+        while (dataArray.length > 352) {
+            const row = dataArray.splice(0, 352).join(",") + "\n";
+            fileHandle.appendFile(row);
+        }
+
+        fileHandle.appendFile(dataArray.join(","));
+    } catch (err) {
+        throw err;
+    } finally {
+        fileHandle.close();
+    }
+}
+
 async function startTransfer(req: GestureDataRequest, res: Response) {
     let fileHandle: FileHandle;
 
@@ -123,27 +144,13 @@ async function startTransfer(req: GestureDataRequest, res: Response) {
 
 async function sendData(req: GestureDataRequest, res: Response) {
     console.log("received append-data request!");
-
-    let fileHandle: FileHandle;
-    
     try {
-        const dataArray = Array.from(new Float32Array(req.file.buffer.buffer));
-        console.log(dataArray.length);
         const filePath = filePathFromFilename(req.file_name);
-        fileHandle = await open(filePath, 'a');
-
-        while (dataArray.length > 352) {
-            const row = dataArray.splice(0, 352).join(",") + "\n";
-            fileHandle.appendFile(row);
-        }
-
-        fileHandle.appendFile(dataArray.join(","));
+        await appendArrayToFile(filePath, req.file.buffer.buffer)
         return res.status(201).send("Data received");
     } catch (err) {
         console.log(err.message);
-        return res.status(500).send("Unknown error");
-    } finally {
-        if (fileHandle) fileHandle.close();
+        return res.status(500).send("Unknown error. You might not have started the transfer.");
     }
 }
 
@@ -158,4 +165,4 @@ async function getGestureData(req: GestureDataDownloadRequest, res: Response) {
 }
 
 
-export { gestureDataRouter };
+export { gestureDataRouter, appendArrayToFile };

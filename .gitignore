@@ -130,5 +130,6 @@ dist
 .pnp.*
 db/*
 
+demonstration_files/*
 files/*
 /ssl_cert

@@ -1,5 +1,8 @@
 import Datastore from "nedb"
 import { Participant, Project, Trial } from "./models/project-model.mts";
+import { GestureClassLocator } from "./demonstration-router.mts";
+
+const codeExpirationMs = 600000; // 10 minutes
 
 // set up database
 const projectDb = new Datastore({
@@ -7,14 +10,51 @@ const projectDb = new Datastore({
     autoload: true
 });
 
+const demonstrationDb = new Datastore({
+    filename: "db/demonstration.db",
+    autoload: true
+});
+
+// demonstration based functions
+export interface GestureClassStamped extends GestureClassLocator {
+    stamped: number;
+    id?: string;
+}
+
+export function addLocator(locator: GestureClassLocator) {
+    const stamped: GestureClassStamped = { ...locator, stamped: Date.now()};
+
+    return new Promise(resolve => {
+        demonstrationDb.insert(stamped, (err: Error, doc: GestureClassStamped) => {
+            if (err) throw err;
+
+            resolve(doc.id);
+        });
+    })
+}
+
+export function getLocatorFromShortCode(shortCode: string): Promise<GestureClassLocator> {
+    return new Promise(resolve => {
+        demonstrationDb.findOne({ _id: shortCode }, (err: Error, doc: GestureClassStamped) => {
+            if (err) throw err;
+
+            if (Date.now() - doc.stamped > codeExpirationMs) {
+                throw Error("Code expired");
+            }
+
+            resolve(doc);
+        });
+    });
+}
+
 // project based functions
-function getNumberOfProjects(): Promise<number> {
+export function getNumberOfProjects(): Promise<number> {
     return new Promise(resolve => {
         projectDb.count({}, (err: Error, count: number) => resolve(count));
     });
 }
  
-function getProject(project_name: string): Promise<Project> {
+export function getProject(project_name: string): Promise<Project> {
     return new Promise(resolve => {
         projectDb.findOne({ project_name }, (err: Error, doc: any) => {
             if (err) throw err;
@@ -24,7 +64,7 @@ function getProject(project_name: string): Promise<Project> {
     })
 }
 
-function addProject(project: Project): Promise<Project> {
+export function addProject(project: Project): Promise<Project> {
     return new Promise(resolve => {
         projectDb.insert(project, (err, doc: Project) => {
             if (err) throw err;
@@ -33,18 +73,18 @@ function addProject(project: Project): Promise<Project> {
     });
 }
 
-function addTokenTo(project_name: string, token: string) {
+export function addTokenTo(project_name: string, token: string) {
     projectDb.update({ project_name: project_name }, 
         { $set: {token: token} }, {}
     );
 }
 
 // participant based functions
-function addParticipant(projectName: string, newParticipant: Participant) {
+export function addParticipant(projectName: string, newParticipant: Participant) {
     projectDb.update({ project_name: projectName }, { $push: { participants: newParticipant } });
 }
 
-function getParticipant(project: Project, participantId: string): Participant {
+export function getParticipant(project: Project, participantId: string): Participant {
     let outParticipant = null;
 
     project.participants.forEach((participant: Participant) => {
@@ -54,12 +94,12 @@ function getParticipant(project: Project, participantId: string): Participant {
     return outParticipant;
 }
 
-function getPidAndUrlCode(pidAndUrlCode: string) {
+export function getPidAndUrlCode(pidAndUrlCode: string) {
     const regex = /(?<pid>.*)-(?<urlCode>.*)/;
     return pidAndUrlCode.match(regex);
 }
 
-function getParticipantFromUrlCode(project: Project, pidAndUrlCode: string) {
+export function getParticipantFromUrlCode(project: Project, pidAndUrlCode: string) {
     const match = getPidAndUrlCode(pidAndUrlCode);
 
     if (match == null) return null;
@@ -74,12 +114,12 @@ function getParticipantFromUrlCode(project: Project, pidAndUrlCode: string) {
     return participant;
 }
 
-function setAllParticipants(projectName: string, allParticipants: Participant[]) {
+export function setAllParticipants(projectName: string, allParticipants: Participant[]) {
     projectDb.update({ project_name: projectName }, { $set: { participants: allParticipants } });
 }
 
 // pretty inefficent, preferentially use setAllParticipants and change in bulk
-async function setParticipant(projectName: string, newParticipant: Participant) {
+export async function setParticipant(projectName: string, newParticipant: Participant) {
     const proj = await getProject(projectName);
     proj.participants = proj.participants.map((participant: Participant) => {
         if (participant.participant_id == newParticipant.participant_id) return newParticipant;
@@ -88,7 +128,7 @@ async function setParticipant(projectName: string, newParticipant: Participant) 
     setAllParticipants(projectName, proj.participants);
 }
 
-function getCompletedTrial(participant: Participant, trialId: string): Trial {
+export function getCompletedTrial(participant: Participant, trialId: string): Trial {
     let outTrial = null;
 
     participant.completedTrials.forEach((trial: Trial) => {
@@ -99,7 +139,7 @@ function getCompletedTrial(participant: Participant, trialId: string): Trial {
 }
 
 // trial based functions
-function getTrial(participant: Participant, trialId: string): Trial {
+export function getTrial(participant: Participant, trialId: string): Trial {
     let outTrial = null;
 
     participant.pendingTrials.forEach((trial: Trial) => {
@@ -110,7 +150,7 @@ function getTrial(participant: Participant, trialId: string): Trial {
 }
 
 // removes trial from input participant as well
-function moveTrialToComplete(participant: Participant, trialId: string) {
+export function moveTrialToComplete(participant: Participant, trialId: string) {
     const newPending: Trial[] = [];
     console.log(participant)
 
@@ -127,7 +167,7 @@ function moveTrialToComplete(participant: Participant, trialId: string) {
     return participant;
 }
 
-function removeTrialFromParticipant(participant: Participant, trialId: string) {
+export function removeTrialFromParticipant(participant: Participant, trialId: string) {
     participant.completedTrials = removeTrialFromList(participant.completedTrials);
     participant.pendingTrials = removeTrialFromList(participant.pendingTrials);
     return participant;
@@ -138,7 +178,7 @@ function removeTrialFromParticipant(participant: Participant, trialId: string) {
 }
 
 // aggregating functions
-function getAllCompletedTrialsFromProject(project: Project) {
+export function getAllCompletedTrialsFromProject(project: Project) {
     let outList: Trial[] = [];
 
     project.participants.forEach(participant => {
@@ -147,5 +187,3 @@ function getAllCompletedTrialsFromProject(project: Project) {
 
     return outList.map(trial => trial.trial_id);
 }
-
-export { getProject, addProject, addTokenTo, getParticipant, addParticipant, setParticipant, getTrial, moveTrialToComplete, getParticipantFromUrlCode, getCompletedTrial, getPidAndUrlCode, getAllCompletedTrialsFromProject, removeTrialFromParticipant };
