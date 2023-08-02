@@ -7,6 +7,7 @@ import { gestureDataRouter } from './gesture-data-router.mts';
 import fs from 'fs';
 import dotenv from 'dotenv';
 import https from 'https';
+import { demonstrationRouter } from './demonstration-router.mts';
 // import { appendDataRouter } from './append-data-router.mts';
 
 dotenv.config();
@@ -28,6 +29,7 @@ app.use('/project', projectRouter); // handles register and login
 app.use('/participant', participantRouter); // manages participants
 app.use('/trial', trialRouter); // deals with browser side client 
 app.use('/gesture-data', gestureDataRouter) // deals with sending gesture data
+app.use('/demonstration', demonstrationRouter) // deals with recording and sending gesture demonstrations
 app.use('/test', testRouter);
 
 if (process.env.USE_CERTIFICATE == "true") {

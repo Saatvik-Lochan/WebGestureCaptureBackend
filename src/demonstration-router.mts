@@ -3,8 +3,9 @@ import { verifyToken } from "./auth.mts";
 import { UserAuthRequest } from "./models/user-auth-request.mts";
 import { addLocator, getLocatorFromShortCode } from "./database-util.mts";
 import path from "path";
-import { write, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
 import { appendArrayToFile } from "./gesture-data-router.mts";
+import multer from "multer";
 
 export interface GestureClassLocator {
     project_name: string;
@@ -15,9 +16,9 @@ interface ShortCodeRequest extends Request {
     filePath: string
 }
 
-async function verifyShortCode (req: ShortCodeRequest, res: Response, next: NextFunction) {
+async function verifyShortCode(req: ShortCodeRequest, res: Response, next: NextFunction) {
     try {
-        const shortCode = 
+        const shortCode =
             req.params.shortcode || req.body.shortcode || req.query.shortcode;
 
         const filePath = await getFileFromShortCode(shortCode);
@@ -36,16 +37,16 @@ async function getFileFromShortCode(shortCode: string) {
     function getFilePathFromGestureLocator(locator: GestureClassLocator) {
         const fileName = `${locator.project_name}-${locator.gesture_name}.csv`;
         const filePath = path.join(__dirname, "demonstration_files", fileName);
-        return filePath; 
+        return filePath;
     }
 }
 
-
+const upload = multer();
 
 export const demonstrationRouter = Router();
 demonstrationRouter.get("/get-shortcode/:gesture_name", verifyToken, getShortCode);
 demonstrationRouter.post("/start-transfer/:shortcode", verifyShortCode, startTransfer);
-demonstrationRouter.post("/append-data/:shortcode", verifyShortCode, appendData);
+demonstrationRouter.post("/append-data/:shortcode", upload.single('data'), verifyShortCode, appendData);
 
 
 async function startTransfer(req: ShortCodeRequest, res: Response) {
