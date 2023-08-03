@@ -80,8 +80,8 @@ async function getDemonstration(req: Request, res: Response) {
 
         rl.on('line', (line) => {
             const array = line.split(",").map((str) => (parseFloat(str)));
-            const buffer = new Float32Array(array);
-            res.write(buffer);
+            const floatArray = new Float32Array(array);
+            res.write(floatArray.buffer);
         });
 
         rl.on('close', () => {
