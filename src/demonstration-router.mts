@@ -81,7 +81,8 @@ async function getDemonstration(req: Request, res: Response) {
         rl.on('line', (line) => {
             const array = line.split(",").map((str) => (parseFloat(str)));
             const floatArray = new Float32Array(array);
-            res.write(floatArray.buffer);
+            const buffer = floatArray.buffer as Buffer;
+            res.write(buffer);
         });
 
         rl.on('close', () => {
