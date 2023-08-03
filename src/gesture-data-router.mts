@@ -113,7 +113,6 @@ async function appendArrayToFile(filePath: string, buffer: ArrayBuffer) {
         }
 
         await fileHandle.appendFile(dataArray.join(","));
-        console.log("reached")
     } catch (err) {
         throw err;
     } finally {
