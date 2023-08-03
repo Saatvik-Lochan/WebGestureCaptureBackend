@@ -78,12 +78,16 @@ async function getDemonstration(req: Request, res: Response) {
             crlfDelay: Infinity
         });
 
+        let count = 0;
+
         rl.on('line', (line) => {
             res.write(line);
+            count += 1;
         });
 
         rl.on('close', () => {
             res.status(200).send();
+            console.log(`Processed ${count} lines`)
         });
     } catch (err) {
         console.log(err);
