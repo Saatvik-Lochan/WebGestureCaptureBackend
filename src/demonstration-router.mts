@@ -79,8 +79,9 @@ async function getDemonstration(req: Request, res: Response) {
         });
 
         rl.on('line', (line) => {
-            const row = line.split(",");
-            res.write(row);
+            const array = line.split(",").map((str) => (parseFloat(str)));
+            const buffer = new Float32Array(array);
+            res.write(buffer);
         });
 
         rl.on('close', () => {
