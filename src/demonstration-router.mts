@@ -3,10 +3,11 @@ import { verifyToken } from "./auth.mts";
 import { UserAuthRequest } from "./models/user-auth-request.mts";
 import { addLocator, getLocatorFromShortCode } from "./database-util.mts";
 import path, { dirname } from "path";
-import { writeFileSync } from "fs";
+import { existsSync, writeFileSync, createReadStream } from "fs";
 import { appendArrayToFile } from "./gesture-data-router.mts";
 import multer from "multer";
 import { fileURLToPath } from "url";
+import { createInterface } from "readline";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -36,13 +37,13 @@ async function verifyShortCode(req: ShortCodeRequest, res: Response, next: NextF
 
 async function getFileFromShortCode(shortCode: string) {
     const locator = await getLocatorFromShortCode(shortCode);
-    return getFilePathFromGestureLocator(locator);
+    return getFilePathFromGestureLocator(locator);   
+}
 
-    function getFilePathFromGestureLocator(locator: GestureClassLocator) {
-        const fileName = `${locator.project_name}-${locator.gesture_name}.csv`;
-        const filePath = path.join(__dirname, "..", "demonstration_files", fileName);
-        return filePath;
-    }
+function getFilePathFromGestureLocator(locator: GestureClassLocator) {
+    const fileName = `${locator.project_name}-${locator.gesture_name}.csv`;
+    const filePath = path.join(__dirname, "..", "demonstration_files", fileName);
+    return filePath;
 }
 
 const upload = multer();
@@ -51,7 +52,45 @@ export const demonstrationRouter = Router();
 demonstrationRouter.get("/get-shortcode/:gesture_name", verifyToken, getShortCode);
 demonstrationRouter.post("/start-transfer/:shortcode", verifyShortCode, startTransfer);
 demonstrationRouter.post("/append-data/:shortcode", upload.single('data'), verifyShortCode, appendData);
+demonstrationRouter.get("/get-demonstration/:project_name/:gesture_name", getDemonstration);
 
+
+async function getDemonstration(req: Request, res: Response) {
+    try {
+        const { project_name, gesture_name } = req.params;
+
+        if (!(project_name && gesture_name)) {
+            return res.status(400).send("Must include project_name and gesture_name");
+        } 
+
+        const filePath = getFilePathFromGestureLocator({ project_name, gesture_name });
+        
+        if (!existsSync(filePath)) {
+            return res.status(204).send("This demonstration has not been recorded yet");
+        }
+        
+        res.setHeader('Content-Type', 'application/json');
+        
+        const fileStream = createReadStream(filePath);
+
+        const rl = createInterface({
+            input: fileStream,
+            crlfDelay: Infinity
+        });
+
+        rl.on('line', (line) => {
+            const row = line.split(",");
+            res.write(row);
+        });
+
+        rl.on('close', () => {
+            res.status(200).send();
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).send("Unknown server error");
+    }
+}
 
 async function startTransfer(req: ShortCodeRequest, res: Response) {
     try {
