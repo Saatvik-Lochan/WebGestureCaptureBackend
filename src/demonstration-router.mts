@@ -66,6 +66,7 @@ async function startTransfer(req: ShortCodeRequest, res: Response) {
 
 async function appendData(req: ShortCodeRequest, res: Response) {
     try {
+        console.log(req.filePath);
         await appendArrayToFile(req.filePath, req.file.buffer.buffer)
         return res.status(201).send("Data received");
     } catch (err) {
