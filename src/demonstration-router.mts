@@ -79,10 +79,7 @@ async function getDemonstration(req: Request, res: Response) {
         });
 
         rl.on('line', (line) => {
-            const array = line.split(",").map((str) => (parseFloat(str)));
-            const floatArray = new Float32Array(array);
-            const buffer = floatArray.buffer as Buffer;
-            res.write(buffer);
+            res.write(line);
         });
 
         rl.on('close', () => {
