@@ -1,6 +1,6 @@
 import { Router, Response, NextFunction } from "express";
 import { getParticipantFromUrlCode, getProject, getTrial } from "./database-util.mts";
-import { FileHandle, open, appendFile } from 'node:fs/promises';
+import { FileHandle, open } from 'node:fs/promises';
 import { existsSync } from "node:fs";
 import { GestureDataDownloadRequest, GestureDataRequest } from "./models/gesture-data-request.mts";
 
@@ -109,10 +109,11 @@ async function appendArrayToFile(filePath: string, buffer: ArrayBuffer) {
 
         while (dataArray.length > 352) {
             const row = dataArray.splice(0, 352).join(",") + "\n";
-            fileHandle.appendFile(row);
+            await fileHandle.appendFile(row);
         }
 
-        fileHandle.appendFile(dataArray.join(","));
+        await fileHandle.appendFile(dataArray.join(","));
+        console.log('%c ', 'font-size: 1px; padding: 125px 125px; background-size: 250px 250px; background: no-repeat url(https://i2.wp.com/i.giphy.com/media/12BYUePgtn7sis/giphy-downsized.gif?w=770&amp;ssl=1);');
     } catch (err) {
         throw err;
     } finally {
