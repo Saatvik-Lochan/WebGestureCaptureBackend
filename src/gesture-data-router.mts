@@ -112,6 +112,7 @@ async function appendArrayToFile(filePath: string, buffer: ArrayBuffer) {
             fileHandle.appendFile(row);
         }
 
+        console.table(dataArray);
         fileHandle.appendFile(dataArray.join(","));
     } catch (err) {
         throw err;
