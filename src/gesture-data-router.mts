@@ -104,7 +104,7 @@ async function appendArrayToFile(filePath: string, buffer: ArrayBuffer) {
 
     try {
         const dataArray = Array.from(new Float32Array(buffer));
-        console.log(dataArray.length);
+        console.log(`received dataArray of length: ${dataArray.length}`);
         fileHandle = await open(filePath, 'a');
 
         while (dataArray.length > 352) {
