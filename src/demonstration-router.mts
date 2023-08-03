@@ -2,10 +2,14 @@ import { Router, Response, Request, NextFunction } from "express";
 import { verifyToken } from "./auth.mts";
 import { UserAuthRequest } from "./models/user-auth-request.mts";
 import { addLocator, getLocatorFromShortCode } from "./database-util.mts";
-import path from "path";
+import path, { dirname } from "path";
 import { writeFileSync } from "fs";
 import { appendArrayToFile } from "./gesture-data-router.mts";
 import multer from "multer";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export interface GestureClassLocator {
     project_name: string;
@@ -21,11 +25,11 @@ async function verifyShortCode(req: ShortCodeRequest, res: Response, next: NextF
         const shortCode =
             req.params.shortcode || req.body.shortcode || req.query.shortcode;
 
-        const filePath = await getFileFromShortCode(shortCode);
-        req.filePath = filePath
+        const filePath = await getFileFromShortCode(shortCode);        
+        req.filePath = filePath;
 
         next()
-    } catch (err) {
+    } catch (error) {
         return res.status(400).send("Invalid shortcode");
     }
 }
@@ -36,7 +40,7 @@ async function getFileFromShortCode(shortCode: string) {
 
     function getFilePathFromGestureLocator(locator: GestureClassLocator) {
         const fileName = `${locator.project_name}-${locator.gesture_name}.csv`;
-        const filePath = path.join(__dirname, "demonstration_files", fileName);
+        const filePath = path.join(__dirname, "..", "demonstration_files", fileName);
         return filePath;
     }
 }
@@ -78,9 +82,10 @@ async function getShortCode(req: UserAuthRequest, res: Response) {
         const shortCode = await addLocator({ project_name, gesture_name });
 
         if (shortCode)
-            return res.status(200).send(shortCode)
-        else
-            return res.status(500).send("Unknown server error");
+            return res.status(200).send(shortCode);
+        
+        // should have exited by now
+        return res.status(500).send("Unknown server error");
 
     } catch (err) {
         return res.status(400).send("Invalid request");

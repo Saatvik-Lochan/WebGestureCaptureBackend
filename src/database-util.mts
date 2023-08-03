@@ -18,28 +18,32 @@ const demonstrationDb = new Datastore({
 // demonstration based functions
 export interface GestureClassStamped extends GestureClassLocator {
     stamped: number;
-    id?: string;
+    _id?: string;
 }
 
 export function addLocator(locator: GestureClassLocator) {
     const stamped: GestureClassStamped = { ...locator, stamped: Date.now()};
 
-    return new Promise(resolve => {
+    return new Promise((resolve, reject)  => {
         demonstrationDb.insert(stamped, (err: Error, doc: GestureClassStamped) => {
-            if (err) throw err;
+            if (err) return reject(err);
 
-            resolve(doc.id);
+            resolve(doc._id);
         });
     })
 }
 
-export function getLocatorFromShortCode(shortCode: string): Promise<GestureClassLocator> {
-    return new Promise(resolve => {
+export function getLocatorFromShortCode(shortCode: string): Promise<GestureClassLocator>{
+    return new Promise((resolve, reject) => {
         demonstrationDb.findOne({ _id: shortCode }, (err: Error, doc: GestureClassStamped) => {
-            if (err) throw err;
+            if (err) return reject(err);
+            
+            if (!doc) {
+                return reject(Error("No such shortcode"));
+            } 
 
             if (Date.now() - doc.stamped > codeExpirationMs) {
-                throw Error("Code expired");
+                return reject(Error("Code expired"));
             }
 
             resolve(doc);
