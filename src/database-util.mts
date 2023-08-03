@@ -2,7 +2,7 @@ import Datastore from "nedb"
 import { Participant, Project, Trial } from "./models/project-model.mts";
 import { GestureClassLocator } from "./demonstration-router.mts";
 
-const codeExpirationMs = 600000; // 10 minutes
+const codeExpirationMs = 60000000; // 1000 minutes (for debug)
 
 // set up database
 const projectDb = new Datastore({
