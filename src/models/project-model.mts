@@ -42,14 +42,14 @@ function isValidTrial(trial: Trial) {
         options: Joi.object({
             instructionDuration: Joi.number()
         }),
-        name: Joi.string().required(),
+        gesture_name: Joi.string().required(),
         gesture_id: Joi.string().required(),
         instruction: Joi.string().required(),
         duration: Joi.number().required()
     });
 
     const trialSchema = Joi.object({
-        name: Joi.string().required(),
+        trial_name: Joi.string().required(),
         trial_id: Joi.string().required(),
         options: Joi.object({
             instructionDuration: Joi.number(),
