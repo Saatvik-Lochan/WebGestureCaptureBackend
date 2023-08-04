@@ -73,7 +73,7 @@ async function getDemonstration(req: Request, res: Response) {
         
         const fileStream = createReadStream(filePath);
         fileStream.pipe(res);
-
+        
         fileStream.on('close', () => {
             res.status(200).send();
             console.log(`Sent successfully`)
