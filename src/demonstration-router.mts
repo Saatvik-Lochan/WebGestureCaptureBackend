@@ -7,8 +7,6 @@ import { existsSync, writeFileSync, createReadStream } from "fs";
 import { appendArrayToFile } from "./gesture-data-router.mts";
 import multer from "multer";
 import { fileURLToPath } from "url";
-import { createInterface } from "readline";
-import { Gesture } from "./models/project-model.mts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
