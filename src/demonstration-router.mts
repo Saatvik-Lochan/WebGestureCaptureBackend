@@ -72,23 +72,13 @@ async function getDemonstration(req: Request, res: Response) {
         res.setHeader('Content-Type', 'application/json');
         
         const fileStream = createReadStream(filePath);
+        fileStream.pipe(res);
 
-        const rl = createInterface({
-            input: fileStream,
-            crlfDelay: Infinity
-        });
-
-        let count = 0;
-
-        rl.on('line', (line) => {
-            res.write(line);
-            count += 1;
-        });
-
-        rl.on('close', () => {
+        fileStream.on('close', () => {
             res.status(200).send();
-            console.log(`Processed ${count} lines`)
+            console.log(`Sent successfully`)
         });
+
     } catch (err) {
         console.log(err);
         return res.status(500).send("Unknown server error");
