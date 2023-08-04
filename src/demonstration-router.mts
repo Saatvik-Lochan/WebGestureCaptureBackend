@@ -8,6 +8,7 @@ import { appendArrayToFile } from "./gesture-data-router.mts";
 import multer from "multer";
 import { fileURLToPath } from "url";
 import { createInterface } from "readline";
+import { Gesture } from "./models/project-model.mts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,6 +20,7 @@ export interface GestureClassLocator {
 
 interface ShortCodeRequest extends Request {
     filePath: string
+    locator: GestureClassLocator;
 }
 
 async function verifyShortCode(req: ShortCodeRequest, res: Response, next: NextFunction) {
@@ -26,10 +28,12 @@ async function verifyShortCode(req: ShortCodeRequest, res: Response, next: NextF
         const shortCode =
             req.params.shortcode || req.body.shortcode || req.query.shortcode;
 
-        const filePath = await getFileFromShortCode(shortCode);        
+        const locator = await getLocatorFromShortCode(shortCode)
+        const filePath = getFilePathFromGestureLocator(locator)
         req.filePath = filePath;
+        req.locator = locator;
 
-        next()
+        next();
     } catch (error) {
         return res.status(400).send("Invalid shortcode");
     }
@@ -88,7 +92,7 @@ async function getDemonstration(req: Request, res: Response) {
 async function startTransfer(req: ShortCodeRequest, res: Response) {
     try {
         writeFileSync(req.filePath, "");
-        return res.status(201).send("Transfer started");
+        return res.status(201).send(req.locator);
 
     } catch (err) {
         console.log(err);
