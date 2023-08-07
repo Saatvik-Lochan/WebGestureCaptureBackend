@@ -30,7 +30,7 @@ type Gesture = {
     options: {
         instructionDuration: number,
     };
-    gesture_id: string;
+    gesture_id: string; // gid, or the id of the gesture class
     gesture_name: string;
     instruction: string;
     duration: number;
