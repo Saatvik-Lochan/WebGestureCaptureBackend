@@ -43,10 +43,10 @@ async function verifyGestureFile(req: GestureDemonstrationRequest, res: Response
 
         if (!(project_name && gesture_id)) {
             return res.status(400).send("Must include project_name and gesture_id");
-        } 
+        }
 
         const filePath = getFilePathFromGestureLocator({ project_name, gesture_id });
-        
+
         if (!existsSync(filePath)) {
             return res.status(204).send("This demonstration has not been recorded yet");
         }
@@ -90,10 +90,10 @@ async function demonstrationExists(req: Request, res: Response) {
 async function getDemonstration(req: GestureDemonstrationRequest, res: Response) {
     try {
         res.setHeader('Content-Type', 'application/json');
-        
+
         const fileStream = createReadStream(req.filePath);
         fileStream.pipe(res);
-        
+
         fileStream.on('close', () => {
             res.status(200).send();
             console.log(`Sent ${req.filePath} successfully`)
@@ -136,7 +136,7 @@ async function getShortCode(req: UserAuthRequest, res: Response) {
 
         if (shortCode)
             return res.status(200).send(shortCode);
-        
+
         // should have exited by now
         return res.status(500).send("Unknown server error");
 
