@@ -6,6 +6,10 @@ import { UserAuthRequest, ProjectPayload } from "./models/user-auth-request.mts"
 // get environment variables
 dotenv.config();
 
+/**
+ * Middleware to verify that a request contains a token.
+ * If it does, adds a user field to the request object with the project name
+ */
 function verifyToken (req: UserAuthRequest, res: Response, next: NextFunction) {
     const token =
       req.body.token || req.query.token || req.headers["x-access-token"];
