@@ -90,7 +90,7 @@ async function getDemonstration(req: GestureDemonstrationRequest, res: Response)
         
         fileStream.on('close', () => {
             res.status(200).send();
-            console.log(`Sent successfully`)
+            console.log(`Sent ${req.filePath} successfully`)
         });
 
     } catch (err) {
