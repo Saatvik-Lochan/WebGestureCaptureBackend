@@ -75,7 +75,13 @@ demonstrationRouter.get("/get-shortcode/:gesture_id", verifyToken, getShortCode)
 demonstrationRouter.post("/start-transfer/:shortcode", verifyShortCode, startTransfer);
 demonstrationRouter.post("/append-data/:shortcode", upload.single('data'), verifyShortCode, appendData);
 demonstrationRouter.get("/get-demonstration/:project_name/:gesture_id", verifyGestureFile, getDemonstration);
+
+demonstrationRouter.get("/shortcode-exists/:shortcode", verifyShortCode, shortCodeExists);
 demonstrationRouter.get("/demonstration-exists/:project_name/:gesture_id", verifyGestureFile, demonstrationExists)
+
+async function shortCodeExists(req: GestureDemonstrationRequest, res: Response) {
+    return res.status(200).send(req.locator);
+}
 
 async function demonstrationExists(req: Request, res: Response) {
     return res.status(200).send("This gesture has a recorded demonstration")
