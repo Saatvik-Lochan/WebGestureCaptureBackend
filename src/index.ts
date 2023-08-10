@@ -1,14 +1,12 @@
 import express from 'express';
-import { projectRouter } from './project-router.mts';
-import { participantRouter } from './participant-router.mts';
-import { trialRouter } from './trial-router.mts';
-import { testRouter } from './test.mts';
-import { gestureDataRouter } from './gesture-data-router.mts';
+import { projectRouter } from './routers/project-router.mts';
+import { participantRouter } from './routers/participant-router.mts';
+import { trialRouter } from './routers/trial-router.mts';
+import { gestureDataRouter } from './routers/gesture-data-router.mts';
 import fs from 'fs';
 import dotenv from 'dotenv';
 import https from 'https';
-import { demonstrationRouter } from './demonstration-router.mts';
-// import { appendDataRouter } from './append-data-router.mts';
+import { demonstrationRouter } from './routers/demonstration-router.mts';
 
 dotenv.config();
 
@@ -30,20 +28,18 @@ app.use('/participant', participantRouter); // manages participants
 app.use('/trial', trialRouter); // deals with browser side client 
 app.use('/gesture-data', gestureDataRouter) // deals with sending gesture data
 app.use('/demonstration', demonstrationRouter) // deals with recording and sending gesture demonstrations
-app.use('/test', testRouter);
 
 if (process.env.USE_CERTIFICATE == "true") {
-    
     const options = {
         key: fs.readFileSync(process.env.SSL_KEY),
         cert: fs.readFileSync(process.env.SSL_CERTIFICATE)
     };
 
     https.createServer(options, app).listen(8000, () => {
-        console.log("Server listening on port 8000 https")
+        console.log("Server listening on port 8000: https")
     });
 } else {
     app.listen(3000, () => {
-        console.log("Server listening on port 3000")
+        console.log("Server listening on port 3000: http")
     });
 }

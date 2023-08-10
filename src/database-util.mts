@@ -1,6 +1,6 @@
 import Datastore from "nedb"
 import { Participant, Project, Trial } from "./models/project-model.mts";
-import { GestureClassLocator } from "./demonstration-router.mts";
+import { GestureClassLocator } from "./routers/demonstration-router.mts";
 
 /**
  * The time after which a shortCode will expire in ms.
@@ -174,7 +174,6 @@ export function getParticipant(project: Project, participantId: string): Partici
  * // expected results:
  * // pid == "1"
  * // urlCode == "d0a710cc25"
- * ```
  * ```
  */
 export function getPidAndUrlCode(pidAndUrlCode: string) {
