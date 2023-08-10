@@ -8,7 +8,7 @@ dotenv.config();
 
 /**
  * Middleware to verify that a request contains a token.
- * If it does, adds a user field to the request object with the project name
+ * If it does, adds a {@link UserAuthRequest.user | user} field to the {@link Request} object with the project name
  */
 function verifyToken (req: UserAuthRequest, res: Response, next: NextFunction) {
     const token =
