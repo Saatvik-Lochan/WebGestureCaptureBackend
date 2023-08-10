@@ -46,6 +46,7 @@ async function verifyGestureDataDownloadRequest(req: GestureDataDownloadRequest,
 
 async function verifyGestureDataRequest(req: GestureDataRequest, res: Response, next: NextFunction) {
     try {
+        // add project_name to the schema
         const gestureDataSchema = gestureDataBaseSchema.keys({
             project_name: Joi.string().required()
         })

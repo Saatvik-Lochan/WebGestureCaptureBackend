@@ -19,22 +19,15 @@ type Participant = {
 type Trial = {
     trial_id: string;
     trial_name: string;
-    options: {
-        instructionDuration: number
-    };
     instructions: string;
     gestures: Gesture[];
 };
 
 type Gesture = {
-    options: {
-        instructionDuration: number,
-    };
     gesture_id: string; // gid, or the id of the gesture class
     gesture_name: string;
     instruction: string;
     duration: number;
-    completed?: boolean;
 };
 
 function isValidTrial(trial: Trial) {

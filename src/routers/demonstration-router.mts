@@ -89,7 +89,7 @@ async function demonstrationExists(req: Request, res: Response) {
 
 async function getDemonstration(req: GestureDemonstrationRequest, res: Response) {
     try {
-        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Content-Type', 'text/csv');
 
         const fileStream = createReadStream(req.filePath);
         fileStream.pipe(res);

@@ -24,7 +24,7 @@ async function register(req: Request, res: Response) {
 
         encryptAndStore(project_name, description, password);
     } catch (err) {
-        res.status(400).send("Unknown error");
+        res.status(500).send("Unknown error");
         console.log(err);
     }
 
@@ -66,10 +66,10 @@ async function login(req: Request, res: Response) {
             const projWithToken = createAndAddToken(result);
             res.status(200).send(projWithToken);
         } else {
-            res.status(400).send("Invalid credentials");
+            res.status(401).send("Invalid credentials");
         }
     } catch (err) {
-        res.status(400).send("Unknown error");
+        res.status(500).send("Unknown error");
         console.log(err.message);
     }
 

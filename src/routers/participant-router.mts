@@ -40,7 +40,7 @@ async function addTrial(req: UserAuthRequest, res: Response) {
                 { participant_id, pendingTrials: [trial], completedTrials: []});
         } else {
             if (participant.pendingTrials.map(trial => trial.trial_id).includes(trial.trial_id)) {
-                return res.status(400).send("Trial of this ID alreay exists")
+                return res.status(409).send("Trial of this ID alreay exists")
             }
 
             participant.pendingTrials.push(trial);
@@ -115,7 +115,7 @@ async function getCompletedTrials(req: UserAuthRequest, res: Response) {
         if (!project) return res.status(400).send("Invalid project");
 
         const completedTrials = getAllCompletedTrialsFromProject(project);
-        res.status(200).send(completedTrials);
+        res.status(200).json(completedTrials);
     }
     catch (err) {
         console.log(err);

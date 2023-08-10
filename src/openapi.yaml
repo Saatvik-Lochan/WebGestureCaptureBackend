@@ -1,0 +1,586 @@
+openapi: '3.0.2'
+info:
+  title: Gesture Logger API
+  version: '1.0'
+servers:
+  - url: https://gesturelogger.com:8000
+paths:
+  /project/register:
+    post:
+      description: > 
+        Register a project with the server. The project
+        name must not already be registered.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectRequest"
+      responses:
+        "201": 
+          description: Project registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "400":
+          description: Request missing parameters
+          content:
+            text/html:
+              schema:
+                type: string
+                example: Username and password both required
+        "409":
+          description: A Project with this name already exists
+        "500":
+          description: Unknown Server Error
+  /project/login:
+    post:
+      description: >
+        Login to a server after you have registered.
+        Returns a JWToken to use in requests which need
+        authentication.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectRequest"
+      responses:
+        "200": 
+          description: Credentials accepted, log in successful
+          content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Project"
+        "400":
+          description: Malformed Request
+        "401":
+          description: Invalid Credentials
+        "500":
+          description: Unknown Server Error
+  /participant/push-trial:
+    post:
+      description: >
+        Addss a trial to the specified Participant
+      parameters:
+        - $ref: "#/components/parameters/token"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                participant_id:
+                  type: string
+                trial:
+                  $ref: "#/components/schemas/Trial"
+      responses:
+        "201":
+          description: Trial added successfully
+        "400": 
+          description: Invalid request
+        "401":
+          description: Invalid token
+        "403":
+          description: Missing token
+        "409":
+          description: Trial of this id already exists
+        "500":
+          description: Unknown Server Error
+  /participant/remove-trial:
+    post:
+      description: > 
+        Removes a trial from a participant. From both its list
+        of complete and incomplete trials
+      parameters:
+       - $ref: "#/components/parameters/token"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                participant_id:
+                  type: string
+                trial_id:
+                  type: string
+      responses:
+        "200":
+          description: Trial removed successfully
+        "400":
+          description: Invalid request
+        "401":
+          description: Invalid token
+        "403":
+          description: Missing token
+        "500":
+          description: Unknown server error
+  /participant/{pid}/get-url:
+    get:
+      description: >
+        Gets a urlCode from a participant id. A urlCode is 
+        used to fetch participant specific information.
+      parameters:
+        - name: pid
+          description: The id of the participant whose URL must be fetched
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/token"
+      responses:
+        "200":
+          description: >
+            A urlCode, which is a string, which can be used 
+            to access participant information
+          content:
+            text/*:
+              schema:
+                type: string
+                example: c7fefae8d3
+        "400":
+          description: Invalid request
+        "401":
+          description: Invalid token
+        "403":
+          description: Missing token
+        "500":
+          description: Unknown Server Error
+  /participant/get-completed-trials:
+    get:
+      description: >
+        Get a list of trial ids. Each id representing
+        a completed trial. It gets all completed trials from 
+        all participants in the project
+      parameters:
+        - $ref: "#/components/parameters/token"
+      responses:
+        "200":
+          description: Completed trials fetched successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example: ["1", "3" , "4"]
+        "400":
+          description: Invalid project from token
+        "401":
+          description: Invalid token
+        "403":
+          description: Missing token
+        "500":
+          description: Unknown Server Error
+  /participant/get-participants:
+    get:
+      description: Returns a list of participants in a project.
+      parameters:
+        - $ref: "#/components/parameters/token"
+      responses:
+        "200":
+          description: An array of Participants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Participant"
+        "401":
+          description: Invalid token
+        "403":
+          description: Missing token
+        "500":
+          description: Unknown Server Error
+  /trial/next-trial/{project_name}/{particiant_id}:
+    get:
+      description: > 
+        Fetches a pending trial from a participant. If there
+        are many such trials, it returns the one that was 
+        first pushed
+      parameters:
+        - $ref: "#/components/parameters/project_name"
+        - $ref: "#/components/parameters/participant_id"
+      responses:
+        "200":
+          description: The next pending trial for the specified participant
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trial"
+        "400": 
+          description: Invalid request
+        "404":
+          description: No pending trials
+        "500":
+          description: Unknown Server Error
+  /trial/complete-trial/{project_name}/{participant_id}/{trial_id}:
+    post:
+      description: >
+       Marks the specified trial as complete. It will no 
+       longer show up as a pending trial. It will now show up
+       in the list of completed trials
+      parameters:
+        - $ref: "#/components/parameters/project_name"
+        - $ref: "#/components/parameters/participant_id"
+        - $ref: "#/components/parameters/trial_id"
+      responses:
+        "200":
+          description: Trial marked as complete
+        "400": 
+          description: Invalid request
+        "500":
+          description: Unknown Server Error
+  /gesture-data/start-transfer:
+    post:
+      description: >
+        Starts the transfer of data for a specific gesture. This must be called
+        before you can append data to that gesture. 
+      requestBody:
+        $ref: "#/components/requestBodies/GestureRequest"
+      responses:
+        "200":
+         description: Transfer started
+        "400": 
+          description: Invalid request
+        "500":
+          description: Unknown server error
+  /gesture-data/append-data:
+    post: 
+      description: >
+        Append data to the specified gesture. You must start the transfer 
+        before this can be used
+      requestBody:
+        $ref: "#/components/requestBodies/GestureDataRequest"
+      responses:
+        "201":
+          description: "Data received"
+        "400": 
+          description: Invalid request
+        "500":
+          description: Unknown Server Error. Transfer might not have been started.
+  /gesture-data/get-gesture/{participant_id}/{trial_id}/{gesture_index}:
+    get:
+      description: >
+        Download the .csv file in which the gesture data has been stored. 
+        The file includes a header.
+      parameters:
+        - $ref: "#/components/parameters/token"
+        - $ref: "#/components/parameters/participant_id"
+        - $ref: "#/components/parameters/trial_id"
+        - name: gesture_index
+          description: The zero-indexed position of the gesture in the trial with the specified trial_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: CSV file with gesture data
+          content:
+            application/csv:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: Invalid request
+        "401":
+          description: Invalid token
+        "403":
+          description: Missing token
+        "500":
+          description: Unknown Server Error
+  /demonstration/get-shortcode/{gesture_id}:
+    get:
+      description: >
+        Gets the shortCode corresponding to the gesture class pointed to by 
+        gesture_id and the token.
+      parameters:
+        - $ref: "#/components/parameters/gesture_id"
+        - $ref: "#/components/parameters/token"
+      responses:
+        "200":
+          description: The shortCode of the specified gesture
+          content:
+            text/*:
+              schema:
+                type: string
+                example: VJJoOKtSlwAda6kD
+        "400":
+          description: Invalid request
+        "401":
+          description: Invalid token
+        "403":
+          description: Missing token
+        "500":
+          description: Unknown Server Error
+  /demonstration/start-transfer/{shortcode}:
+    post:
+      description: 
+        Starts the transfer of demonstration data relevant to the specified
+        shortcode
+      parameters:
+        - $ref: "#/components/parameters/shortcode"
+      responses:
+        "201":
+          description: Returns an object which uniquely describes the location of the gesture identified by the shortCode
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GestureClassLocator"
+        "400":
+          description: Invalid or expired shortCode
+        "500":
+          description: Unknown Server Error
+  /demonstration/append-data/{shortcode}:
+    post:
+      description: >
+        Append demonstration gesture data to the relevant gesture class.
+        You must first start the tranfer before this route will work
+      parameters:
+        - $ref: "#/components/parameters/shortcode"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/data"
+      responses:
+        "201":
+          description: Data received
+        "400":
+          description: Invalid or expired shortCode
+        "500":
+          description: Unknown Server Error
+  /demonstration/get-demonstration/{project_name}/{gesture_id}:
+    get:
+      description: >
+        Fetches the specified demonstration gesture data
+      parameters:
+        - $ref: "#/components/parameters/project_name"
+        - $ref: "#/components/parameters/gesture_id"
+      responses:
+        "200":
+          description: A stream of text with the gesture data of the specified demonstration
+          content:
+            text/csv:
+              schema:
+                type: string
+        "204":
+          description: The request demonstration does not exist on the server
+        "400":
+          description: Invalid request
+        "500":
+          description: Unknown Server Error
+  /demonstration/demonstration-exists/{project_name}/{gesture_id}:
+    get:
+      description: 
+        Checks if a demonstration has data that exists as a file on the server
+      parameters:
+        - $ref: "#/components/parameters/project_name"
+        - $ref: "#/components/parameters/gesture_id"
+      responses:
+        "200":
+          description: The specified demonstration exists on the server
+        "204":
+          description: The request demonstration does not exist on the server
+        "400":
+          description: Invalid request
+        "500":
+          description: Unknown Server Error
+  /demonstration/shortcode-exists/{shortcode}:
+    get:
+      description: >
+        Checks if a shortCode is valid. Returns a gesture locator if it does.
+      parameters:
+        - $ref: "#/components/parameters/shortcode"
+      responses:
+        "200":
+          description: The specified shortcode exists. Returns a locator which identifies the gesture pointed to by the shortcode.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GestureClassLocator"
+        "400":
+          description: Invalid or expired shortCode
+        "500":
+          description: Unknown Server Error
+components:
+  requestBodies:
+    GestureDataRequest:
+      content:
+        multipart/form-data:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/GestureRequest"
+              - $ref: "#/components/schemas/data"
+    GestureRequest:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: "#/components/schemas/GestureRequest"
+  parameters:
+    shortcode:
+      name: shortcode
+      in: path
+      required: true
+      description: A code that is used to uniquely identify a gesture class
+      example: VJJoOKtSlwAda6kD
+      schema:
+        type: string
+    project_name:
+      name: project_name
+      in: path
+      required: true
+      description: The name of the relevant project
+      schema:
+        type: string
+    participant_id:
+      name: particiant_id
+      in: path
+      required: true
+      description: The id of the relevant participant
+      schema:
+        type: string
+    trial_id:
+      name: trial_id
+      in: path
+      required: true
+      description: The id of the relevant trial
+      schema:
+        type: string
+    gesture_id:
+      name: gesture_id
+      in: path
+      required: true
+      description: The id of the relevant gesture class
+      schema:
+        type: string
+    token:
+      name: token
+      in: query
+      required: true
+      description: A JWToken provided on login
+      schema:
+        type: string
+  schemas:
+    data:
+      type: object
+      properties:
+        data: 
+          type: string
+          format: binary
+      required:
+        - data
+    GestureRequest:
+      type: object
+      properties:
+        project_name:
+          type: string
+        participant_id:
+          type: string
+        trial_id:
+          type: string
+        gesture_index:
+          type: number
+      required:
+        - project_name
+        - participant_id
+        - trial_id
+        - gesture_index
+    ProjectRequest:
+      type: object
+      properties:
+        project_name:
+          type: string
+        password:
+          type: string
+      required:
+        - project_name
+        - password
+    GestureClassLocator:
+      type: object
+      properties:
+        project_name: 
+          type: string
+        gesture_id:
+          type: string
+      required:
+        - project_name
+        - gesture_id
+    Gesture:
+      type: object
+      properties:
+        gesture_id:
+          type: string
+        gesture_name:
+          type: string
+        instructions: 
+          type: string  
+        duration:
+          type: number
+      required:
+        - gesture_id
+        - gesture_name
+        - instructions
+        - duration
+    Trial:
+      type: object
+      properties:
+        trial_id:
+          type: string
+        trial_name:
+          type: string
+        instructions:
+          type: string
+        gestures:
+          type: array
+          items:
+            $ref: "#/components/schemas/Gesture"
+      required:
+        - trial_id
+        - trial_name
+        - instructions
+        - gestures
+    Participant:
+      type: object
+      properties:
+        participant_id:
+          type: string
+        pendingTrials:
+          type: array
+          items:
+            $ref: "#/components/schemas/Trial"
+        completedTrials:
+          type: array
+          items:
+            $ref: "#/components/schemas/Trial"
+        urlCode:
+          type: string
+      required:
+        - participant_id
+        - pendingTrials
+        - completedTrials
+    Project:
+      type: object
+      properties:
+        project_name:
+          type: string
+        description:
+          type: string
+        encryptedPass: 
+          type: string
+        participants:
+          type: array
+          items:
+            $ref: "#/components/schemas/Participant"
+        token:
+          type: string
+      required:
+        - project_name
+        - description
+        - encryptedPass
+        - participants
+        - token  # token is only required when returned from API
+
+        
+
+
