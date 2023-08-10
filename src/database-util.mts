@@ -217,6 +217,15 @@ function setAllParticipants(projectName: string, allParticipants: Participant[])
 }
 
 // pretty inefficent, preferentially use setAllParticipants and change in bulk
+/**
+ * Replaces the {@link Participant} which has the same {@link Participant.participant_id | participant_id} 
+ * with {@link newParticipant} in the {@link Project} specified by {@link projectName} in the database.  
+ * @param projectName The name of the project in which to replace the participant
+ * @param newParticipant The new {@link Participant} to replace the previous participant
+ * 
+ * @remarks Iterates through all participants in a {@link Project}
+ * @remarks Consider using {@link setAllParticipants} after changing all participants in bulk
+ */
 export async function setParticipant(projectName: string, newParticipant: Participant) {
     const proj = await getProject(projectName);
     proj.participants = proj.participants.map((participant: Participant) => {
@@ -226,6 +235,13 @@ export async function setParticipant(projectName: string, newParticipant: Partic
     setAllParticipants(projectName, proj.participants);
 }
 
+/**
+ * Gets the {@link Trial} which has {@link trialId} in a {@link Participant}. 
+ * @param participant The {@link Participant} in which to search for the trial
+ * @param trialId The id of the trial to be found
+ * @returns The {@link Trial} which has the correct {@link trialId}. 
+ * Returns `null` if there is no such trial.
+ */
 export function getCompletedTrial(participant: Participant, trialId: string): Trial {
     let outTrial = null;
 
@@ -237,6 +253,13 @@ export function getCompletedTrial(participant: Participant, trialId: string): Tr
 }
 
 // trial based functions
+/**
+ * Gets a pending (uncompleted) {@link Trial} from a {@link Participant} from its trialId.
+ * @param participant The {@link Participant} in which to search for a trial
+ * @param trialId The trialId to search for
+ * @returns The {@link Trial} which has a {@link Trial.trial_id} matching {@link trialId}.
+ * Returns `null` if there is no such {@link Participant.pendingTrials | pendingTrial}
+ */
 export function getTrial(participant: Participant, trialId: string): Trial {
     let outTrial = null;
 
@@ -247,10 +270,19 @@ export function getTrial(participant: Participant, trialId: string): Trial {
     return outTrial;
 }
 
-// removes trial from input participant as well
-export function moveTrialToComplete(participant: Participant, trialId: string) {
+/** 
+ * Moves a {@link Trial} from {@link Participant.pendingTrials} to {@link Participant.completedTrials}.
+ * This marks it as completed, and ready to be downloaded.
+ * @param participant The {@link Participant} in which to move the trials
+ * @param trialId The id of the {@link Trial} to move
+ * @returns the {@link Participant} with the {@link Trial} specified by {@link trialId}
+ * moved to completed. If there was no trial matching {@link trialId} then it returns the original ({@link participant})
+ * @remarks
+ * The input {@link Participant} ({@link participant}) has no guarantee of being unmodified.
+ * Consider it consumed - use the returned {@link Participant}.
+ */
+export function moveTrialToComplete(participant: Participant, trialId: string): Participant {
     const newPending: Trial[] = [];
-    console.log(participant)
 
     for (let trial of participant.pendingTrials) {
         if (trial.trial_id == trialId) {
@@ -261,10 +293,19 @@ export function moveTrialToComplete(participant: Participant, trialId: string) {
     }
 
     participant.pendingTrials = newPending;
-    console.log(participant)
     return participant;
 }
 
+/**
+ * Removes the {@link Trial} with the an {@link Trial.trial_id | id} matcching {@link trialId} from 
+ * the input {@link Participant}.
+ * @param participant The {@link Participant} in which to remove the {@link Trial}.
+ * @param trialId The id of the {@link Trial} to remove
+ * @returns 
+ * 
+ * @remarks This function removes the {@link Trial} from both {@link Participant.completedTrials | completed trials} and {@link Participant.pendingTrials | pending trials}
+ * @remarks This function assumed you will use the returned {@link Participant}, consider {@link participant} consumed
+ */
 export function removeTrialFromParticipant(participant: Participant, trialId: string) {
     participant.completedTrials = removeTrialFromList(participant.completedTrials);
     participant.pendingTrials = removeTrialFromList(participant.pendingTrials);
@@ -276,7 +317,13 @@ export function removeTrialFromParticipant(participant: Participant, trialId: st
 }
 
 // aggregating functions
-export function getAllCompletedTrialsFromProject(project: Project) {
+/**
+ * Returns a list of all the completed {@link Trial.trial_id | trial ids} in the {@link Project}, regardless
+ * of the {@link Participant} in which the {@link Trial} is stored.
+ * @param project The {@link Project} in which to collect the ids.
+ * @returns A list of all the completed {@link Trial.trial_id | trial ids}
+ */
+export function getAllCompletedTrialsFromProject(project: Project): string[] {
     let outList: Trial[] = [];
 
     project.participants.forEach(participant => {
