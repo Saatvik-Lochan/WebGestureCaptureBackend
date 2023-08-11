@@ -11,6 +11,11 @@ interface GestureDataRequest extends Request {
     participant: Participant;
     trial: Trial;
     gesture: Gesture;
+
+    /**
+     * A variable populated by the middleware, pointing to the location
+     * of the gesture data in the server's system storage
+     */
     file_name: string;
 }
 
