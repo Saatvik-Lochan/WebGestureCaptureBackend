@@ -64,7 +64,7 @@ async function verifyGestureFile(req: GestureDemonstrationRequest, res: Response
 
 function getFilePathFromGestureLocator(locator: GestureClassLocator) {
     const fileName = `${locator.project_name}-${locator.gesture_id}.csv`;
-    const filePath = path.join(__dirname, "..", "demonstration_files", fileName);
+    const filePath = path.join(__dirname, "..", "..", "demonstration_files", fileName);
     return filePath;
 }
 
