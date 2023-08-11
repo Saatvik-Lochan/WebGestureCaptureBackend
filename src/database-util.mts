@@ -5,7 +5,7 @@ import { GestureClassLocator } from "./routers/demonstration-router.mts";
 /**
  * The time after which a shortCode will expire in ms.
  */
-const codeExpirationMs = 60000000; // 1000 minutes (for debug)
+const codeExpirationMs = 3_600_000; // 1 hour
 
 // set up database
 const projectDb = new Datastore({
