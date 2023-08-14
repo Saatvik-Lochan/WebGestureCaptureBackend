@@ -25,8 +25,11 @@ Then run
 $ npm install
 ```
 
-Since the service is a [node.js](https://nodejs.org/en) server with typescript and ESModules, you can 
-run it with 
+Before you can run the application, you must first create a `.env` file.
+See []
+
+Since the service is a [node.js](https://nodejs.org/en) server with typescript
+and ESModules, you can run it with 
 
 ```console
 $ ts-node-esm --transpile-only src/index.ts
@@ -41,6 +44,7 @@ and run a node server with `NODE_ENV=production` on the resulting files.
 #### HTTPS and Environment
 HTTPS is required for this service to work with [WebGestureCapture](https://github.com/Saatvik-Lochan/WebGestureCapture).
 You can easily get your own certificate with [LetsEncrypt](https://letsencrypt.org/).
+
 
 ## API
 The API presented by this service is defined in [`openapi.yaml`](src/openapi.yaml) or a markdown version at [`openapi.md`](src/openapi.md). 
