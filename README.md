@@ -25,17 +25,20 @@ Then run
 $ npm install
 ```
 
-Since it is written in typsecript, we must first compile it with
-
-
-Since the service is a [node.js](https://nodejs.org/en) server, you can 
-run it in production with 
+Since the service is a [node.js](https://nodejs.org/en) server with typescript and ESModules, you can 
+run it with 
 
 ```console
-$ NODE_ENV=production node src/index.ts
+$ ts-node-esm --transpile-only src/index.ts
 ```
 
-### HTTPS
+This should be sufficient in most use cases. However if the typing overheads
+are undesirable you will have to change the imports, from
+`.mts` to `.mjs`, change `tsconfig.json` to emit the build 
+files, compile with typescript
+and run a node server with `NODE_ENV=production` on the resulting files.
+
+#### HTTPS and Environment
 HTTPS is required for this service to work with [WebGestureCapture](https://github.com/Saatvik-Lochan/WebGestureCapture).
 You can easily get your own certificate with [LetsEncrypt](https://letsencrypt.org/).
 
@@ -43,4 +46,18 @@ You can easily get your own certificate with [LetsEncrypt](https://letsencrypt.o
 The API presented by this service is defined in [`openapi.yaml`](src/openapi.yaml) or a markdown version at [`openapi.md`](src/openapi.md). 
 
 ## Expansion
-You are encouraged to fork this 
+You are encouraged to fork this repo to add your own features.
+Most of the code has [JSDoc](https://jsdoc.app/) annotations
+which should help you on your way.
+
+You can build in development easier by first installing nodemon
+```console
+$ npm install --save-dev nodemon
+```
+
+Then you can run
+```console
+$ npm run build
+```
+
+The server will now be live, and will update with any changes.
