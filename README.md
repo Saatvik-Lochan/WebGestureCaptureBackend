@@ -45,7 +45,8 @@ and run a node server with `NODE_ENV=production` on the resulting files.
 HTTPS is required for this service to work with [WebGestureCapture](https://github.com/Saatvik-Lochan/WebGestureCapture).
 You can easily get your own certificate with [LetsEncrypt](https://letsencrypt.org/).
 
-Once you have your certificate and private key, create a `.env` file
+Once you have your certificate and private key, create a `.env` file in 
+the root directory of the repository.
 
 ```console
 $ touch .env
@@ -65,7 +66,11 @@ SSL_KEY=<ssl key>
 USE_CERTIFICATE=true
 ```
 
-Populate  
+`<token>` can be any string, and is used to encrypt login credentials. Ensure
+it is kept hidden.
+
+`<ssl certificate>` and `<ssl key>` are paths to your SSL
+certificate and private key respectively. 
 
 ## API
 The API presented by this service is defined in [`openapi.yaml`](src/openapi.yaml) or a markdown version at [`openapi.md`](src/openapi.md). 
