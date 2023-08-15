@@ -43,6 +43,9 @@ are undesirable you will have to change the imports, from
 files, compile with typescript
 and run a node server with `NODE_ENV=production` on the resulting files.
 
+This would also be required if you want to run the server with pm2, or
+another process manager.
+
 #### HTTPS and Environment
 HTTPS is required for this service to work with [WebGestureCapture](https://github.com/Saatvik-Lochan/WebGestureCapture).
 You can easily get your own certificate with [LetsEncrypt](https://letsencrypt.org/).
