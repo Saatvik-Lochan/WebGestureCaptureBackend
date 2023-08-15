@@ -2,13 +2,14 @@
   "name": "webgesturecapturebackend",
   "version": "1.0.0",
   "description": "backend for the corresponding webgesturebackend",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "type": "module",
-  "module": "es2022",
+  "module": "ESNext",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon -e ts,mts src/index.ts",
-    "debug": "ts-node --inspect src/index.ts"
+    "debug": "ts-node --inspect src/index.ts",
+    "prod": "npx ts-node-esm --transpile-only src/index.ts"
   },
   "author": "Saatvik Lochan",
   "license": "ISC",

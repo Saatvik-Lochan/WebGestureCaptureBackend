@@ -32,8 +32,10 @@ Since the service is a [node.js](https://nodejs.org/en) server with typescript
 and ESModules, you can run it with 
 
 ```console
-$ ts-node-esm --transpile-only src/index.ts
+$ npm run prod
 ```
+
+which will load the server alongside its typing information.
 
 This should be sufficient in most use cases. However if the typing overheads
 are undesirable you will have to change the imports, from
