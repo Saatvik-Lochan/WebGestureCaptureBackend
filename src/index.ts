@@ -3,13 +3,15 @@ import { projectRouter } from './routers/project-router.mts';
 import { participantRouter } from './routers/participant-router.mts';
 import { trialRouter } from './routers/trial-router.mts';
 import { gestureDataRouter } from './routers/gesture-data-router.mts';
-import fs from 'fs';
-import dotenv from 'dotenv';
-import https from 'https';
 import { demonstrationRouter } from './routers/demonstration-router.mts';
+import { config } from 'dotenv';
+import { CronJob } from 'cron';
+import fs from 'fs';
+import https from 'https';
+import { cleanupAll } from './cleanup.mts';
 
-dotenv.config();
-
+// add environment variables
+config();
 
 const app = express();
 
@@ -29,6 +31,7 @@ app.use('/trial', trialRouter); // deals with browser side client
 app.use('/gesture-data', gestureDataRouter) // deals with sending gesture data
 app.use('/demonstration', demonstrationRouter) // deals with recording and sending gesture demonstrations
 
+// Start server
 if (process.env.USE_CERTIFICATE == "true") {
     const options = {
         key: fs.readFileSync(process.env.SSL_KEY),
@@ -42,4 +45,27 @@ if (process.env.USE_CERTIFICATE == "true") {
     app.listen(3000, () => {
         console.log("Server listening on port 3000: http")
     });
+}
+
+// Start cleanup
+if (process.env.CLEANUP_SCHEDULE) {
+    const schedule = process.env.CLEANUP_SCHEDULE;
+
+    try {
+        new CronJob(
+            schedule,
+            async () => {
+                try {
+                    console.log("Running cleanup...")
+                    await cleanupAll();
+                } catch (err) {
+                    console.log(`Failed to clean up, caught error: ${err}`);
+                }
+            },
+            null,
+            true
+        )
+    } catch {
+        console.log("Invalid cron schedule")
+    }
 }

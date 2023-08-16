@@ -1,5 +1,5 @@
 import { Router, Response, Request } from "express";
-import { addProject, getProject, addTokenTo } from "../database-util.mts";
+import { addProject, getProject, addTokenTo, updateLastAccessedToNow } from "../database-util.mts";
 import { hash, compare } from "bcrypt";
 import { Project } from "../models/project-model.mts";
 import jwt from "jsonwebtoken";
@@ -31,7 +31,14 @@ async function register(req: Request, res: Response) {
     async function encryptAndStore(project_name: string, description: string, password: string) {
         const encryptedPass = await hash(password, 10);
 
-        const newProject: Project = {project_name, description, encryptedPass, participants: []};
+        const newProject: Project = {
+            project_name, 
+            description, 
+            encryptedPass, 
+            participants: [],
+            last_accessed: Date.now()
+        };
+
         const insertedProj = await addProject(newProject);
         const projWithToken = createAndAddToken(insertedProj);
         res.status(201).json(projWithToken);
@@ -63,6 +70,7 @@ async function login(req: Request, res: Response) {
         const result = await validateRequest(req);
 
         if (result) {
+            updateLastAccessedToNow(result.project_name);
             const projWithToken = createAndAddToken(result);
             res.status(200).send(projWithToken);
         } else {

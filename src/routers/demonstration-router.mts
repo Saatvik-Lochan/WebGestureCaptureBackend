@@ -1,15 +1,11 @@
 import { Router, Response, Request, NextFunction } from "express";
 import { verifyToken } from "../auth.mts";
 import { UserAuthRequest } from "../models/user-auth-request.mts";
-import { addLocator, getLocatorFromShortCode } from "../database-util.mts";
-import path, { dirname } from "path";
+import { __rootdir, addLocator, getLocatorFromShortCode } from "../database-util.mts";
+import path from "path";
 import { existsSync, writeFileSync, createReadStream } from "fs";
 import { appendArrayToFile } from "./gesture-data-router.mts";
 import multer from "multer";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 export interface GestureClassLocator {
     project_name: string;
@@ -64,7 +60,7 @@ async function verifyGestureFile(req: GestureDemonstrationRequest, res: Response
 
 function getFilePathFromGestureLocator(locator: GestureClassLocator) {
     const fileName = `${locator.project_name}-${locator.gesture_id}.csv`;
-    const filePath = path.join(__dirname, "..", "..", "demonstration_files", fileName);
+    const filePath = path.join(__rootdir, "demonstration_files", fileName);
     return filePath;
 }
 

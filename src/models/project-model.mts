@@ -15,6 +15,12 @@ type Project = {
      * insertion into the database.
      */
     token?: string; 
+
+    /**
+     * The last time this project was logged into. It is used to 
+     * clear old projects.
+     */
+    last_accessed: number;
 };
 
 /**

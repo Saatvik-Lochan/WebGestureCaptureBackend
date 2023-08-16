@@ -1,6 +1,13 @@
 import Datastore from "nedb"
 import { Participant, Project, Trial } from "./models/project-model.mts";
 import { GestureClassLocator } from "./routers/demonstration-router.mts";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
+import { error } from "console";
+
+// export __rootdir
+const __filename = fileURLToPath(import.meta.url);
+export const __rootdir = join(dirname(__filename), "..");
 
 /**
  * The time after which a shortCode will expire in ms.
@@ -8,13 +15,13 @@ import { GestureClassLocator } from "./routers/demonstration-router.mts";
 const codeExpirationMs = 3_600_000; // 1 hour
 
 // set up database
-const projectDb = new Datastore({
-    filename: "db/user.db",
+const projectDb = new Datastore<Project>({
+    filename: join(__rootdir, "db", "projects.db"),
     autoload: true
 });
 
-const demonstrationDb = new Datastore({
-    filename: "db/demonstration.db",
+const demonstrationDb = new Datastore<GestureClassStamped>({
+    filename: join(__rootdir, "db", "demonstration.db"),
     autoload: true
 });
 
@@ -54,6 +61,37 @@ export function addLocator(locator: GestureClassLocator) {
 }
 
 /**
+ * Updates a Project's {@link Project.last_accessed last accessed time},
+ * to the current time (`Date.now()`) 
+ * @param project_name The project to update
+ * @returns A Promise that resolves in `undefined` once updated, or rejects
+ * with an error
+ */
+export function updateLastAccessedToNow(project_name: string) {
+    return new Promise((resolve, reject) => {
+        projectDb.update({ project_name }, { $set: { last_accessed: Date.now() } }, {}, (err, _) => {
+            if (err) reject(err);
+            else resolve(undefined);
+        });
+    })
+}
+
+/**
+ * Deletes all expired short codes
+ * @returns A `Promise` that resolves in `undefined` on completion, or 
+ * rejects with an error
+ */
+export function removeExpiredShortCodes(): Promise<undefined> {
+    return new Promise((resolve, reject) => {
+        const oldestAge = Date.now() - codeExpirationMs;
+        demonstrationDb.remove({ stamped: { $lt: oldestAge }}, { multi: true }, (err: Error, _) => {
+            if (err) reject(error);
+            else resolve(undefined);
+        })
+    })
+}
+
+/**
  * Attempts to find a locator with the corresponding shortcode and return it.
  * @param shortCode The shortcode or id to serarch for.
  * @returns The locator corresponding to the shortCode.
@@ -87,7 +125,24 @@ export function getNumberOfProjects(): Promise<number> {
         projectDb.count({}, (err: Error, count: number) => resolve(count));
     });
 }
- 
+
+/**
+ * Gets the projects which have not been used since a specific time
+ * @param time The number of milliseconds from the epoch
+ * @returns An Promise which resolves to an array of project names, or
+ * rejects with an error
+ */
+export function getProjectsUsedBefore(time: number): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+        projectDb.find({ last_accessed: { $lt: time } }, (err: Error, docs: Project[]) => {
+            if (err) reject(err)
+            else {
+                resolve(docs.map(proj => proj.project_name));
+            }
+        })
+    })
+} 
+
 /**
  * Searches the database for a project with the corresponding project_name.
  * @remarks 
@@ -121,13 +176,28 @@ export function addProject(project: Project): Promise<Project> {
 }
 
 /**
+ * Removes a project from the database
+ * @param project_name The name of the project to remove
+ * @returns A `Promise` which resolves to `undefined` once the project is 
+ * removed, or rejects with an error if there is one.
+ */
+export function removeProject(project_name: string): Promise<undefined> {
+    return new Promise((resolve, reject) => {
+        projectDb.remove({ project_name }, {}, (err, _) => {
+            if (err) reject(err);
+            else resolve(undefined);
+        })
+    })
+}
+
+/**
  * Add a {@link https://jwt.io/ | JWToken} to a project in the database
  * @remarks Overwrites any existing tokens (though the old tokens will remain valid with their payload)
  * @param project_name The project to add a token to
  * @param token the JWToken to add to the project
  */
 export function addTokenTo(project_name: string, token: string) {
-    projectDb.update({ project_name: project_name }, 
+    projectDb.update({ project_name }, 
         { $set: {token: token} }, {}
     );
 }

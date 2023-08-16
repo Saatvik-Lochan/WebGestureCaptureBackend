@@ -1,10 +1,6 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
 import { Request, Response, NextFunction } from "express";
 import { UserAuthRequest, ProjectPayload } from "./models/user-auth-request.mts";
-
-// get environment variables
-dotenv.config();
 
 /**
  * Middleware to verify that a request contains a token.

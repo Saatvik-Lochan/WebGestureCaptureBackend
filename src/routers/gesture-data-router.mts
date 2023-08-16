@@ -1,5 +1,5 @@
 import { Router, Response, NextFunction } from "express";
-import { getParticipantFromUrlCode, getProject, getTrial } from "../database-util.mts";
+import { __rootdir, getParticipantFromUrlCode, getProject, getTrial } from "../database-util.mts";
 import { FileHandle, open } from 'node:fs/promises';
 import { existsSync } from "node:fs";
 import { GestureDataDownloadRequest, GestureDataRequest } from "../models/gesture-data-request.mts";
@@ -8,12 +8,7 @@ import Joi from "joi";
 import multer from "multer";
 import path from "node:path";
 
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 import { verifyToken } from "../auth.mts";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 const upload = multer();
 
@@ -97,7 +92,7 @@ gestureDataRouter.get("/get-gesture/:participant_id/:trial_id/:gesture_index",
         verifyToken, verifyGestureDataDownloadRequest, getGestureData)
 
 function filePathFromFilename(fileName: string): string {
-    return path.join(__dirname, '..', '..', 'files', fileName);
+    return path.join(__rootdir, 'files', fileName);
 }
 
 async function appendArrayToFile(filePath: string, buffer: ArrayBuffer) {
