@@ -75,7 +75,7 @@ USE_CERTIFICATE=true
 
 # A standard chron schedule format for when to run cleanup.
 # Comment this out to never run cleanup
-CLEANUP_SCHEDULE="0 3 * * * *"
+CLEANUP_SCHEDULE="0 3 * * *"
 
 # How long an unused project lasts before it is deleted, in days.
 # Comment this out to never delete projects
