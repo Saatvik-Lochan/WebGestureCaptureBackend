@@ -1,5 +1,5 @@
 import { unlink, readdir, stat } from "fs/promises";
-import { removeProject, __rootdir, getProjectsUsedBefore, removeExpiredShortCodes } from "./database-util";
+import { removeProject, __rootdir, getProjectsUsedBefore, removeExpiredShortCodes } from "./database-util.js";
 import { join } from "path";
 
 const daysToMs = (days: number) => days * 24 * 60 * 60 * 1000; 
