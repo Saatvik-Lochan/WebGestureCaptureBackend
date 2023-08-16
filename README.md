@@ -28,23 +28,18 @@ $ npm install
 Before you can run the application, you must first create a `.env` file.
 See [HTTPS and Environment](#https-and-environment) on details before continuing.
 
-Since the service is a [node.js](https://nodejs.org/en) server with typescript
-and ESModules, you can run it with 
+Since the service is a [node.js](https://nodejs.org/en) server with typescript, you must first build it with
+
+```console
+$ npm run build 
+```
+
+which just runs the typscript compiler. Then simply run 
 
 ```console
 $ npm run prod
 ```
 
-which will load the server alongside its typing information.
-
-This should be sufficient in most use cases. However if the typing overheads
-are undesirable you will have to change the imports, from
-`.mts` to `.mjs`, change `tsconfig.json` to emit the build 
-files, compile with typescript
-and run a node server with `NODE_ENV=production` on the resulting files.
-
-This would also be required if you want to run the server with pm2, or
-another process manager.
 
 #### HTTPS and Environment
 HTTPS is required for this service to work with [WebGestureCapture](https://github.com/Saatvik-Lochan/WebGestureCapture).
@@ -64,18 +59,37 @@ $ sudo nano .env
 ```
 
 Then ensure your file looks like this
-```env
+```sh
+# The key used to encrypt user passwords. This can be any random string
 TOKEN_KEY=<token>
-SSL_CERTIFICATE=<ssl certificate>
-SSL_KEY=<ssl key>
+
+# Path to SSL certificate
+SSL_CERTIFICATE=<ssl-certificate>
+
+# Path to SSL private key
+SSL_KEY=<ssl-key>
+
+# Whether to use SSL. It is required to be `true` if you are running
+# this in conjunction with a WebXR frontend
 USE_CERTIFICATE=true
+
+# A standard chron schedule format for when to run cleanup.
+# Comment this out to never run cleanup
+CLEANUP_SCHEDULE="0 3 * * * *"
+
+# How long an unused project lasts before it is deleted, in days.
+# Comment this out to never delete projects
+PROJECT_LIFE_DAYS=365
+
+# How long recorded gesture data lasts before it is deleted, in days. 
+# Comment this out to not delete any gesture data
+DATA_LIFE_DAYS=3
+
+# The production environment variable
+NODE_ENV=production
 ```
 
-`<token>` can be any string, and is used to encrypt login credentials. Ensure
-it is kept hidden.
-
-`<ssl certificate>` and `<ssl key>` are paths to your SSL
-certificate and private key respectively. 
+Switch out `<token>`, `<ssl-certificate>` and `<ssl-key>` with your own.
 
 ## API
 The API presented by this service is defined in [`openapi.yaml`](src/openapi.yaml) or a markdown version at [`openapi.md`](src/openapi.md). 
@@ -85,14 +99,19 @@ You are encouraged to fork this repo to add your own features.
 Most of the code has [JSDoc](https://jsdoc.app/) annotations
 which should help you on your way.
 
-You can build in development easier by first installing nodemon
+You can build in development easier by first installing nodemon, if it 
+is not already installed.
+
 ```console
 $ npm install --save-dev nodemon
 ```
 
+Ensure you change the `NODE_ENV` environment variable in your `.env` file
+to `development`. 
+
 Then you can run
 ```console
-$ npm run build
+$ npm run dev
 ```
 
 The server will now be live, and will update with any changes.
