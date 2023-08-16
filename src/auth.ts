@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import { UserAuthRequest, ProjectPayload } from "./models/user-auth-request";
+import { UserAuthRequest, ProjectPayload } from "./models/user-auth-request.js";
 
 /**
  * Middleware to verify that a request contains a token.

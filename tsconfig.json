@@ -1,11 +1,7 @@
 {
     "compilerOptions": {
-       "allowImportingTsExtensions": true,
-       "noEmit": true,
        "target": "ESNext",  
        "module": "ESNext",
-       "types": ["node", "express"],
-       "allowSyntheticDefaultImports": true,
        "esModuleInterop": true,
        "moduleResolution": "node",
        "outDir": "dist"

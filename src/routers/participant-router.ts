@@ -1,8 +1,8 @@
 import { Router, Response } from "express";
-import { verifyToken } from "../auth";
-import { UserAuthRequest } from "../models/user-auth-request";
-import { addParticipant, getAllCompletedTrialsFromProject, getParticipant, getProject, removeTrialFromParticipant, setParticipant } from "../database-util";
-import { Trial, isValidTrial } from "../models/project-model";
+import { verifyToken } from "../auth.js";
+import { UserAuthRequest } from "../models/user-auth-request.js";
+import { addParticipant, getAllCompletedTrialsFromProject, getParticipant, getProject, removeTrialFromParticipant, setParticipant } from "../database-util.js";
+import { Trial, isValidTrial } from "../models/project-model.js";
 import { randomBytes } from "crypto";
 
 // set up router

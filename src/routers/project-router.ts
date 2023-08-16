@@ -1,7 +1,7 @@
 import { Router, Response, Request } from "express";
-import { addProject, getProject, addTokenTo, updateLastAccessedToNow } from "../database-util";
+import { addProject, getProject, addTokenTo, updateLastAccessedToNow } from "../database-util.js";
 import { hash, compare } from "bcrypt";
-import { Project } from "../models/project-model";
+import { Project } from "../models/project-model.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 

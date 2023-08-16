@@ -1,5 +1,5 @@
 import { Router, Response, Request } from "express";
-import { getParticipantFromUrlCode, getProject, getTrial, moveTrialToComplete, setParticipant } from "../database-util";
+import { getParticipantFromUrlCode, getProject, getTrial, moveTrialToComplete, setParticipant } from "../database-util.js";
 
 // set up router
 const trialRouter = Router();
