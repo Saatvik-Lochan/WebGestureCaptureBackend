@@ -1,10 +1,10 @@
 import { Router, Response, Request, NextFunction } from "express";
-import { verifyToken } from "../auth.mts";
-import { UserAuthRequest } from "../models/user-auth-request.mts";
-import { __rootdir, addLocator, getLocatorFromShortCode } from "../database-util.mts";
+import { verifyToken } from "../auth";
+import { UserAuthRequest } from "../models/user-auth-request";
+import { __rootdir, addLocator, getLocatorFromShortCode } from "../database-util";
 import path from "path";
 import { existsSync, writeFileSync, createReadStream } from "fs";
-import { appendArrayToFile } from "./gesture-data-router.mts";
+import { appendArrayToFile } from "./gesture-data-router";
 import multer from "multer";
 
 export interface GestureClassLocator {

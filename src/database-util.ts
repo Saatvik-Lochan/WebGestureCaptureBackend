@@ -1,6 +1,6 @@
 import Datastore from "nedb"
-import { Participant, Project, Trial } from "./models/project-model.mts";
-import { GestureClassLocator } from "./routers/demonstration-router.mts";
+import { Participant, Project, Trial } from "./models/project-model";
+import { GestureClassLocator } from "./routers/demonstration-router";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { error } from "console";

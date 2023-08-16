@@ -1,6 +1,6 @@
 import { Request } from "express";
-import { Gesture, Participant, Project, Trial } from "./project-model.mts";
-import { UserAuthRequest } from "./user-auth-request.mts";
+import { Gesture, Participant, Project, Trial } from "./project-model";
+import { UserAuthRequest } from "./user-auth-request";
 
 interface GestureDataDownloadRequest extends UserAuthRequest {
     file_name: string;

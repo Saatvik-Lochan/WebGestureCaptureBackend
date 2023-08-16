@@ -1,14 +1,14 @@
 import { Router, Response, NextFunction } from "express";
-import { __rootdir, getParticipantFromUrlCode, getProject, getTrial } from "../database-util.mts";
+import { __rootdir, getParticipantFromUrlCode, getProject, getTrial } from "../database-util";
 import { FileHandle, open } from 'node:fs/promises';
 import { existsSync } from "node:fs";
-import { GestureDataDownloadRequest, GestureDataRequest } from "../models/gesture-data-request.mts";
+import { GestureDataDownloadRequest, GestureDataRequest } from "../models/gesture-data-request";
 
 import Joi from "joi";
 import multer from "multer";
 import path from "node:path";
 
-import { verifyToken } from "../auth.mts";
+import { verifyToken } from "../auth";
 
 const upload = multer();
 

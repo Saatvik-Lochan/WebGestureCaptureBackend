@@ -1,14 +1,14 @@
 import express from 'express';
-import { projectRouter } from './routers/project-router.mts';
-import { participantRouter } from './routers/participant-router.mts';
-import { trialRouter } from './routers/trial-router.mts';
-import { gestureDataRouter } from './routers/gesture-data-router.mts';
-import { demonstrationRouter } from './routers/demonstration-router.mts';
+import { projectRouter } from './routers/project-router';
+import { participantRouter } from './routers/participant-router';
+import { trialRouter } from './routers/trial-router';
+import { gestureDataRouter } from './routers/gesture-data-router';
+import { demonstrationRouter } from './routers/demonstration-router';
 import { config } from 'dotenv';
 import { CronJob } from 'cron';
 import fs from 'fs';
 import https from 'https';
-import { cleanupAll } from './cleanup.mts';
+import { cleanupAll } from './cleanup';
 
 // add environment variables
 config();
