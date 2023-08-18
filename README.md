@@ -40,6 +40,10 @@ which just runs the typscript compiler. Then simply run
 $ npm run prod
 ```
 
+This should be sufficient for most use cases. However if you need
+to guarantee the server being up at all times, look into creating 
+a [service](https://web.archive.org/web/20180212163211/https://certsimple.com/blog/deploy-node-on-linux),
+using [pm2](https://pm2.keymetrics.io/) or something similar.
 
 #### HTTPS and Environment
 HTTPS is required for this service to work with [WebGestureCapture](https://github.com/Saatvik-Lochan/WebGestureCapture).
