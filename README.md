@@ -45,6 +45,20 @@ to guarantee the server being up at all times, look into creating
 a [service](https://web.archive.org/web/20180212163211/https://certsimple.com/blog/deploy-node-on-linux),
 using [pm2](https://pm2.keymetrics.io/) or something similar.
 
+If you want to use pm2, it's as easy as install it with 
+
+```console
+$ npm install -g pm2 
+```
+
+Then running it with
+
+```console
+$ pm2 start dist/index.js --log server.log
+```
+
+
+
 #### HTTPS and Environment
 HTTPS is required for this service to work with [WebGestureCapture](https://github.com/Saatvik-Lochan/WebGestureCapture).
 You can easily get your own certificate with [LetsEncrypt](https://letsencrypt.org/).
