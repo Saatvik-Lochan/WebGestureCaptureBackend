@@ -1,4 +1,6 @@
 import express from 'express';
+import https from 'https';
+import fs from 'fs';
 import { projectRouter } from './routers/project-router.js';
 import { participantRouter } from './routers/participant-router.js';
 import { trialRouter } from './routers/trial-router.js';
@@ -6,8 +8,6 @@ import { gestureDataRouter } from './routers/gesture-data-router.js';
 import { demonstrationRouter } from './routers/demonstration-router.js';
 import { config } from 'dotenv';
 import { CronJob } from 'cron';
-import fs from 'fs';
-import https from 'https';
 import { cleanupAll } from './cleanup.js';
 
 // add environment variables
