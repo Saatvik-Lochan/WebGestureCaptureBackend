@@ -1,5 +1,8 @@
 import { Router, Response, Request } from "express";
+import { __rootdir } from "../database-util.js";
 import { getParticipantFromUrlCode, getProject, getTrial, moveTrialToComplete, setParticipant } from "../database-util.js";
+import { join } from "path";
+import { writeFileSync } from "fs";
 
 // set up router
 const trialRouter = Router();
@@ -59,6 +62,11 @@ async function completeTrial(req: Request, res: Response) {
         // trial is known to be valid after this
         const newParticipant = moveTrialToComplete(participant, trial_id);
         await setParticipant(project_name, newParticipant);
+
+        if (req.body) {
+           const path = join(__rootdir, "log_files", "trials.log");
+           writeFileSync(path, req.body, { flag: 'a' });
+        }
 
         res.status(200).send("Trial completed");
         console.log("Completed a trial");

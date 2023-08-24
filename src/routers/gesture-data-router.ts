@@ -92,7 +92,7 @@ gestureDataRouter.get("/get-gesture/:participant_id/:trial_id/:gesture_index",
         verifyToken, verifyGestureDataDownloadRequest, getGestureData)
 
 function filePathFromFilename(fileName: string): string {
-    return path.join(__rootdir, 'files', fileName);
+    return path.join(__rootdir, 'data_files', fileName);
 }
 
 async function appendArrayToFile(filePath: string, buffer: ArrayBuffer) {

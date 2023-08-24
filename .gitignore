@@ -131,5 +131,5 @@ dist
 db/*
 
 demonstration_files/*
-files/*
+data_files/*
 /ssl_cert

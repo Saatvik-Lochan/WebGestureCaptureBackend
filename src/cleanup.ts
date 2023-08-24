@@ -25,7 +25,7 @@ export async function cleanupAll() {
 
 async function getOldFiles(): Promise<string[]> {    
     if (process.env.DATA_LIFE_DAYS) {
-        const dataFilesDir = join(__rootdir, "files");
+        const dataFilesDir = join(__rootdir, "data_files");
         const allFilesPromise = readdir(dataFilesDir);
         
         const ageLimit = parseFloat(process.env.DATA_LIFE_DAYS);
