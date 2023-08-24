@@ -132,4 +132,5 @@ db/*
 
 demonstration_files/*
 data_files/*
+log_files/*
 /ssl_cert
