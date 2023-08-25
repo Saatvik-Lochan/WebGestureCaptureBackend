@@ -61,12 +61,16 @@ async function completeTrial(req: Request, res: Response) {
 
         // trial is known to be valid after this
         const newParticipant = moveTrialToComplete(participant, trial_id);
-        await setParticipant(project_name, newParticipant);
+        // await setParticipant(project_name, newParticipant);
 
-        if (req.body) {
-           const path = join(__rootdir, "log_files", "trials.log");
-           console.log(req.body);
-           writeFileSync(path, req.body, { flag: 'a' });
+        try {
+            if (req.body) {
+                const path = join(__rootdir, "log_files", "trials.log");
+                const logString = `project: ${project_name}; participant: ${participant.participant_id}; trial: ${trial_id}; redos: ${req.body}\n`;
+                writeFileSync(path, logString, { flag: 'a' });
+            }
+        } catch (err) {
+            console.log(`Failed to write to log file ${err}`);
         }
 
         res.status(200).send("Trial completed");
