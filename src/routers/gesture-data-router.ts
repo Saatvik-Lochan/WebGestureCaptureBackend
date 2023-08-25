@@ -103,8 +103,8 @@ async function appendArrayToFile(filePath: string, buffer: ArrayBuffer) {
         console.log(`received dataArray of length: ${dataArray.length}`);
         fileHandle = await open(filePath, 'a');
 
-        while (dataArray.length > 352) {
-            const row = dataArray.splice(0, 352).join(",") + "\n";
+        while (dataArray.length > 359) {
+            const row = dataArray.splice(0, 359).join(",") + "\n";
             await fileHandle.appendFile(row);
         }
 
