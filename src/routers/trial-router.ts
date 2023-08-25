@@ -67,6 +67,7 @@ async function completeTrial(req: Request, res: Response) {
             if (req.body) {
                 const path = join(__rootdir, "log_files", "trials.log");
                 mkdirSync(dirname(path), { recursive: true });
+                console.log(req.body);
                 const logString = `project: ${project_name}; participant: ${participant.participant_id}; trial: ${trial_id}; redos: ${req.body}\n`;
                 writeFileSync(path, logString, { flag: 'a' });
             }
