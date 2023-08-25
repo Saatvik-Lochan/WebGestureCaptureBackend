@@ -65,6 +65,7 @@ async function completeTrial(req: Request, res: Response) {
 
         if (req.body) {
            const path = join(__rootdir, "log_files", "trials.log");
+           console.log(req.body);
            writeFileSync(path, req.body, { flag: 'a' });
         }
 
