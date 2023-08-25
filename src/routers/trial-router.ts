@@ -1,8 +1,8 @@
 import { Router, Response, Request } from "express";
 import { __rootdir } from "../database-util.js";
 import { getParticipantFromUrlCode, getProject, getTrial, moveTrialToComplete, setParticipant } from "../database-util.js";
-import { join } from "path";
-import { writeFileSync } from "fs";
+import { dirname, join } from "path";
+import { mkdirSync, writeFileSync } from "fs";
 
 // set up router
 const trialRouter = Router();
@@ -66,6 +66,7 @@ async function completeTrial(req: Request, res: Response) {
         try {
             if (req.body) {
                 const path = join(__rootdir, "log_files", "trials.log");
+                mkdirSync(dirname(path), { recursive: true });
                 const logString = `project: ${project_name}; participant: ${participant.participant_id}; trial: ${trial_id}; redos: ${req.body}\n`;
                 writeFileSync(path, logString, { flag: 'a' });
             }

@@ -1,12 +1,12 @@
 import { Router, Response, NextFunction } from "express";
 import { __rootdir, getParticipantFromUrlCode, getProject, getTrial } from "../database-util.js";
 import { FileHandle, open } from 'node:fs/promises';
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { GestureDataDownloadRequest, GestureDataRequest } from "../models/gesture-data-request.js";
 
 import Joi from "joi";
 import multer from "multer";
-import path from "node:path";
+import path, { dirname } from "node:path";
 
 import { verifyToken } from "../auth.js";
 
@@ -117,20 +117,16 @@ async function appendArrayToFile(filePath: string, buffer: ArrayBuffer) {
 }
 
 async function startTransfer(req: GestureDataRequest, res: Response) {
-    let fileHandle: FileHandle;
-
     try {
         const filePath = filePathFromFilename(req.file_name);
-        fileHandle = await open(filePath, 'w');
-        fileHandle.write(getHeader());
+        mkdirSync(dirname(filePath), { recursive: true });
+        writeFileSync(filePath, getHeader());
         
         return res.status(200).send("transfer started");
     } catch (err) {
         console.log(err.message);
         return res.status(500).send("Unknown error");
-    } finally {
-        if (fileHandle) fileHandle.close();
-    }
+    } 
 
     // find a way to not call this (and also not have to load entire file to repopulate it)
     function getHeader() {

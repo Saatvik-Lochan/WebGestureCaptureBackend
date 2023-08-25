@@ -2,8 +2,8 @@ import { Router, Response, Request, NextFunction } from "express";
 import { verifyToken } from "../auth.js";
 import { UserAuthRequest } from "../models/user-auth-request.js";
 import { __rootdir, addLocator, getLocatorFromShortCode } from "../database-util.js";
-import path from "path";
-import { existsSync, writeFileSync, createReadStream } from "fs";
+import path, { dirname } from "path";
+import { existsSync, writeFileSync, createReadStream, mkdirSync } from "fs";
 import { appendArrayToFile } from "./gesture-data-router.js";
 import multer from "multer";
 
@@ -103,6 +103,7 @@ async function getDemonstration(req: GestureDemonstrationRequest, res: Response)
 
 async function startTransfer(req: GestureDemonstrationRequest, res: Response) {
     try {
+        mkdirSync(dirname(req.filePath), { recursive: true });
         writeFileSync(req.filePath, "");
         return res.status(201).send(req.locator);
 
