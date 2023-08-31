@@ -15,8 +15,8 @@ recommend you host your own service along with hosting your own [frontend](https
 To host your own service. First clone the repo, and cd into it. 
 
 ```console
-$ git clone https://github.com/Saatvik-Lochan/WebGestureCaptureBackend.git
-$ cd WebGestureCaptureBackend
+git clone https://github.com/Saatvik-Lochan/WebGestureCaptureBackend.git
+cd WebGestureCaptureBackend
 ```
 
 Then run
