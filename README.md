@@ -54,7 +54,7 @@ npm install -g pm2
 Then running it with
 
 ```console
-pm2 start dist/index.js --log server.log
+pm2 start dist/index.js
 ```
 
 
