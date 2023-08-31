@@ -121,7 +121,7 @@ You can build in development easier by first installing nodemon, if it
 is not already installed.
 
 ```console
-$ npm install --save-dev nodemon
+npm install --save-dev nodemon
 ```
 
 Ensure you change the `NODE_ENV` environment variable in your `.env` file
@@ -129,7 +129,7 @@ to `development`.
 
 Then you can run
 ```console
-$ npm run dev
+npm run dev
 ```
 
 The server will now be live, and will update with any changes.
