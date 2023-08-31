@@ -22,7 +22,7 @@ $ cd WebGestureCaptureBackend
 Then run
 
 ```console
-$ npm install
+npm install
 ```
 
 Before you can run the application, you must first create a `.env` file.
@@ -31,13 +31,13 @@ See [HTTPS and Environment](#https-and-environment) on details before continuing
 Since the service is a [node.js](https://nodejs.org/en) server with typescript, you must first build it with
 
 ```console
-$ npm run build 
+npm run build 
 ```
 
 which just runs the typscript compiler. Then simply run 
 
 ```console
-$ npm run prod
+npm run prod
 ```
 
 This should be sufficient for most use cases. However if you need
@@ -48,13 +48,13 @@ using [pm2](https://pm2.keymetrics.io/) or something similar.
 If you want to use pm2, it's as easy as install it with 
 
 ```console
-$ npm install -g pm2 
+npm install -g pm2 
 ```
 
 Then running it with
 
 ```console
-$ pm2 start dist/index.js --log server.log
+pm2 start dist/index.js --log server.log
 ```
 
 
@@ -67,13 +67,13 @@ Once you have your certificate and private key, create a `.env` file in
 the root directory of the repository.
 
 ```console
-$ touch .env
+touch .env
 ```
 
 Open the file in your editor of choice
 
 ```console
-$ sudo nano .env
+nano .env
 ```
 
 Then ensure your file looks like this
