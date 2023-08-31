@@ -63,6 +63,8 @@ pm2 start dist/index.js
 HTTPS is required for this service to work with [WebGestureCapture](https://github.com/Saatvik-Lochan/WebGestureCapture).
 You can easily get your own certificate with [LetsEncrypt](https://letsencrypt.org/).
 
+> Expects .pem files for both the certificate and the key
+
 Once you have your certificate and private key, create a `.env` file in 
 the root directory of the repository.
 
