@@ -1,4 +1,4 @@
-import Datastore from "nedb"
+import Datastore from '@seald-io/nedb';
 import { Participant, Project, Trial } from "./models/project-model.js";
 import { GestureClassLocator } from "./routers/demonstration-router.js";
 import { dirname, join } from "path";
